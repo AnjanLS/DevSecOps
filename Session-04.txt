@@ -1,0 +1,68 @@
+Session-04
+==========
+vim editor -  visual improved editor
+-> esc mode is default
+-> press i to enter into insert mode
+-> press esc to enter into command mode 
+-> press : to enter into command mode
+
+command mode
+------------
+-> :q - quit 
+-> :wq - write and quit
+-> :q! - force quit without changes
+-> :/<word-to-find> - search the word from top to bottom
+-> :?<word-to search> - search the word from bottom to top
+-> :noh - no highlight/remove highlight words 
+-> :set nu - set line numbers in the file
+-> :set nonu - don't set line numbers in the file
+-> :28 d - delete 28th line
+-> :<line-number>s/<word-to-find>/<word-to-replace> - replaces first occurances in that line,s means subtitute
+-> :<line-number>s/<word-to-find>/<word-to-replace>/g - replaces all occurances in that line,g means globally
+-> :%s/<word-to-find>/<word-to-replace>/g - replaces all occurances in file
+-> :%d - delete entire content
+
+esc mode
+--------
+-> u - undo
+-> yy - copy the line
+-> p - paste
+-> <number-of-times>p - paste the line number of times
+-> dd - cut the line
+-> gg - takes to top
+-> shift+g - takes to bottom
+
+Insert mode
+-----------
+-> i - to get insert mode in a file
+
+Linux administration
+--------------------
+user management - the process of managing user access to the operating system and its resources.
+eg: create user, add user to any group, etc
+
+-> useradd <user-name> - creates new user and group with same name
+-> /etc/passwd - contains user info
+-> /etc/group - contains group info
+-> id <user-name> - display user info
+-> In linux user must have only one primary group and atleast secondary group
+-> passwd <user-name> - sets password to the user
+-> groupadd <group-name> - creates new group
+-> usermod -g <group-name> <user-name> - add user to the primary group,g for primary
+-> usermod -aG <group-name> <user-name> - add user to the secondary group,G for secondary
+-> before removing user from the group, move him to some default group and for secondary aslo and then delete the user so the user don't have access to
+   any groups.
+   ex:  [root@ip-172-31-88-131 ~]# id anjan
+		uid=1001(anjan) gid=1002(devops) groups=1002(devops),1003(testing)
+		[root@ip-172-31-88-131 ~]# usermod -g anjan anjan
+		[root@ip-172-31-88-131 ~]# usermod -aG anjan anjan
+		[root@ip-172-31-88-131 ~]# userdel anjan
+		[root@ip-172-31-88-131 ~]# id anjan
+		id: ‘anjan’: no such user
+		[root@ip-172-31-88-131 ~]#
+
+-> /etc/ssh/sshd_config - edit the ssh related configuraton, If you made any mistakes in file then we can't ssh into server
+-> systemctl restart sshd - it will restart the sshd, any changes if you made may apply
+-> sshd -t - it will check the configuraton issues correct or not, -t for testing
+-> key based authentication - we should generate public and private key, then the admin will attach our public key to the server so we can access the 
+   server with private key and do not share private key with anyone in the company.

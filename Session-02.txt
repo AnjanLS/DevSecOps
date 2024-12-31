@@ -1,0 +1,114 @@
+Session-02
+==========
+1.what is a computer?
+A computer is an electronic device that processes and stores data, following instructions to perform various tasks. It consists of hardware 
+(physical parts) and software (programs).
+
+
+2.Client Server Architecture?
+Client-server architecture is a model where a client (such as a computer or application) requests services or resources, and a server provides them. 
+The client sends requests to the server, which processes them and returns the necessary data or response.If we can't access then we have troubleshoot.
+eg:- facebook.com --> facebook application in facebook servers.
+	 Web-Browser --> Client Software
+
+
+RAM(Random access memory) - It's a computer's short-term memory that stores data the processor needs to run applications and open files. 
+RAM is a critical component of a computer that works with the central processing unit (CPU).
+
+Storage - the process of creating a permanent record of information in the brain. It's one of three fundamental stages of memory, along with encoding 
+and retrieval.
+
+OS(Operating System) - software that manages a computer's hardware and software resources, and allows users to interact with the computer's hardware.
+It performs basic functions like memory and processor management, and error detection.
+
+Processor - It is also known as a central processing unit (CPU), is the main component of a computer that controls the machine's operations.
+
+Server (For hosting application) - a computer, software program, or storage device that provides resources, data, services, or programs to other 
+computers, called clients,over a network. Servers are the core of computer operations, and are often used in data centers to power businesses. 
+port forwarding --> To deploy application in our own laptop and open it in Internet.
+---------------
+
+ECC/EC2 (Elastic Cloud Computing) - It  is a default web service that allows users to rent virtual servers, or instances, to run applications in the cloud. 
+EC2 is a popular service for hosting applications, running batch jobs, and other computing needs.
+Instance = server = node
+
+Firewall - It is a network security tool that monitors and controls traffic flow to protect network devices from potential threats.
+*allow everyone through the traffic.
+*Inbound-Incoming Traffic
+*Outbound-Outgoing Traffic
+
+AMI - Amazon machine Image
+Image is also known as entire operating system and extention for Image is .iso(International organization for standardization)
+ex: c:\windows
+	Redhat Enterprise Linux = centos = Amazon Enterprise Linux = Fedora = AlmaLinux
+
+3)Why we need OS?
+Anything need to access from the Storage we need os because, the data which is stored in the HDD we can't see directly but the OS will connect with 
+the hardware and interact with kernel through user interface. kernel is act like a brain of OS. It follows monolothic architecture.
+
+Monolothic Architecture
+------------------------
+Applications
+	^
+    |
+User Mode(Handles other OS features)
+	^
+	|
+Kernel Mode(Handles only basic OS features like File-system/Process/Memory/I/O/Device Management and Concurrency.)
+	^
+	|
+Hardware Machine
+
+Linus Torvalds - Inventor of Linux - Invented Linux OS due to using other paid OS
+----------------------------------
+when we are buying a laptop we are purchasing both hardware and OS, In 1980's servers are using unix OS and personal laptop using IBM bios OS.
+users don't have option, so Linus Torvalds developed Linux from the scratch by using c and it is open source similar like unix.
+he developed kernel, the component which is connected to the hardware.
+OS = Kernel + User Interface = Open Source
+
+Linux Implementations/Distrinutions/Flavours(Used Linux kernel and developed their own Software) 
+--------------------------------------------
+RHEL
+IBM AIX
+Ubuntu 
+Fedora
+Solaris
+Android
+Suse, open source Linux Git - https://github.com/torvalds/linux
+
+->opensource don't have support for the customers, if you have any problems post it in a community group they will respond and solve the issue.
+->Enterprise they do have support and don't need to worry, If you are facing with any problem the support team will resolve the issue.
+
+Authentication
+--------------
+1. What you know --> Username and Password
+2. What you are --> Username and Token/OTP
+3. What you have --> Fingerprints, Retina, Palm, etc.
+
+A public key(.pub) and a private key(.pem) are a pair of keys that work together to encrypt and decrypt data in a public-key cryptosystem: 
+Public key --> Can be shared with anyone and is used to encrypt messages or verify digital signatures
+Private key --> Should only be known by the owner and is used to decrypt messages or create digital signatures
+
+-> ssh-keygen -f <file-name> --> It generates public and private key.
+-> Git bash is a SSH Client, Git Client, Mini Linux.
+-> AWS Linux 2023 AMI(default-ec2 user)/Amazon Linux 2 AMI(HVM) - Free tier
+-> t3.micro/t2.micro - Free tier
+-> Public IP -> 18.205.151.148
+-> We use protocol ssh for accessing to the linux server, default ssh port number is 22 and HTTP/HTTPs is 80/443.
+-> there's a multiple services in server like mail, DB, FTP
+-> for connecting to the server, ssh -i <Private-key> ec2-user@IP
+-> ssh -i daws-82s.pem ec2-user@18.205.151.148 ,we are connecting to the server.
+
+PWD -> Present working directory
+C:\Users\anjan -> Windows Format
+/c/Users/anjan -> Linux Format
+
+ls -l -> List sub directories.
+
+1. Create public and private key
+2. Import public key
+3. Create Firewall
+4. Create Instance
+5. Connect to Instance
+6. Teminate when not using.
+

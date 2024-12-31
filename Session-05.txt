@@ -1,0 +1,36 @@
+Session-05
+==========
+
+Permissions
+-----------
+R - Read - 4
+W - Write - 2
+X - Execute - 1
+
+-		rw-			r--			r--		. 1 ec2-user ec2-user
+file	<owner>		<group>		<others>
+
+ec2-user -> owner -> read and write -> u 
+ec2-user -> group -> read only -> g
+others -> other than and owner and group -> read only -> o
+
+who can change permissions of a file or folder - owners or root user
+ 
+-> chmod o+r <file-name>
+-> chmod o-r <file-name>
+-> chmod ugo+rwx <file-name>
+-> chmod 774 <file-name>
+
+login using public key
+----------------------
+-> admin should ask for aruna  public key
+-> root user can create .ssh folder in /home/aruna
+-> ownership of the folder should be on aruna
+-> chown -R aruna:aruna .ssh, R means 
+-> chown <user>:<group> file/folder
+-> inside .ssh we need to create a file called authorized_keys
+-> this file owner should be aruna
+-> permission can be max 600, they have read only permission
+-> vi /etc/ssh/sshd_config
+-> uncomment pubkeyauthentication and change it to yes
+-> then we can able to login by using uname and password or public key authentication

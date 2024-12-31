@@ -1,0 +1,127 @@
+Session-3
+=========
+ssh-keygen -f daws-82s - For generating a private and a public key
+ssh -i <privatekey> ec2-user@IP - For connecting to the server
+
+Absolute path - Specifies the location of a file or directory from the root directory of a file system. An absolute path contains all the information 
+needed to locate the file.
+eg: ssh -i /c/DeSecOps/daws-82s/daws-82s.pem ec2-user@IP
+
+Relative path - Specifies the location of a file or directory relative to the current directory. A relative path needs to be combined with another 
+path to access a file.
+eg: ssh -i daws-82s.pem ec2-user@IP
+
+clear -> the screen will be clear
+
+$ -> denotes normal user
+
+# -> denotes administrator/root user
+
+If we need administrator acces, use
+
+sudo su -> will be in the same user profile with root access
+
+exit -> to get back to the /home/user profile
+
+/root -> root user home folder
+
+sudo su - -> lands into root user home folder /root
+
+<command-name> <options> <input>
+
+uname -> kernel name 
+
+-a,--all -> prints all the information
+
+--help -> provides info on built-in commands
+
+ls -> list of subdirectories
+
+ls -l -> long listing format with more details, alphabetical order
+
+ls -la -> list all the files including hidden files and folders
+
+ls -lr -> reverse alphabetical order
+
+ls -lt -> new files on top
+
+ls -ltr -> old files on top
+
+ls -ltrh -> human readable
+
+drwx------  -> d means directory
+
+-rw-r--r--  -> - means file
+
+lrw-r--r--  -> l means link file
+
+touch <file-name> -> creates an empty file
+
+windows is case insensitive, but linux is case sensitive
+
+cat > devops.txt -> enter info/text, once done press enter and ctrl+d
+
+>> -> append, adds to the current text
+
+mkdir <directory-name> -> creates new directory
+
+rmdir <directory-name> -> removes only empty directory
+
+rm -r <directory-name> -> recursively delete everything inside the directory
+
+rm -rf <file-name>/rm <file-name> -> -f means forcily removes file
+
+cp <source-file> <destination-file> -> copying files
+
+cd / -> lands into root directory
+
+wget <url> -> downloads the file 
+
+curl <url> -> display the content on the screen
+
+curl <url> -o <file-name> -> download the content with name given by using curl, -o output
+
+https://github.com/DAWS-82S/expense-documentation
+
+/ -> seperator/delimiter/fragments
+
+echo -> printing statement
+
+grep <keyword-to-search> <filename> -> to search the specific word in the filename
+
+passwd -> It contains all the user Info
+
+cat <filename> | grep <keyword-to-search> -> used to search the keyword in the specific file by using pipeline(|)
+
+| -> pipe, series of commands that are connected together to perform complex tasks
+eg: cat passwd | grep ec2-user 
+
+cut -> to cut from a specific file/url
+eg: echo https://github.com/DAWS-82S/expense-documentation | cut -d "/" -f1 
+o/p: https:
+	
+awk (Aho, Weinberger, and Kernighan)-> used for the fragments as same as cut, NF means last fragment
+eg: echo https://github.com/DAWS-82S/expense-documentation | awk -F "/" '{print $1F}'
+o/p: https:
+eg: echo https://github.com/DAWS-82S/expense-documentation | awk -F "/" '{print $NF}'
+o/p: expense-documentation
+eg: awk -F ":" '{print $1F}' passwd
+o/p: prints all the uname from the passwd
+
+head -> it will display top 10 lines, -n means number of lines
+eg: head passwd
+	head -n 3 passwd
+	cat passwd | head -n 3
+	
+tail -> it will display last 10 lines
+eg: tail passwd
+	cat passwd | tail -n 5
+	head -n 11 passwd | tail -n 5, we can use head and tail combination to get specificnumber of lines
+	
+find -> to find a specific file/directory, In root it is easy to search everything, "*-02*" also finds the mentioned keyword
+find <which-location> -name "<file-name>"
+eg: [root@ip-172-31-88-131 ~]# find / -name "ec2-user"
+	/var/spool/mail/ec2-user
+	/home/ec2-user
+	[root@ip-172-31-88-131 ~]# find / -type d -name "ec2-user"
+	/home/ec2-user
