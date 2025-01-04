@@ -114,7 +114,7 @@ connect from git-bash - ssh ec2-user@<IP-address> -> (password)DevOps321
 -> Start the service - systemctl start backend, systemctl enable backend, systemctl status backend
 -> For this application to work fully functional we need to load schema to the Database.We need to load the schema. To load schema we need to install 
    mysql client - dnf install mysql -y
--> mysql -h <MYSQL-SERVER-PRIVATE-IPADDRESS> -u root -pExpenseApp@1
+-> mysql -h <MYSQL-SERVER-PRIVATE-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
 -> so we are accessing database server from application server
 -> restart the service - systemctl restart backend
 -> then we can play with the sql commands.
