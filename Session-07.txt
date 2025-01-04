@@ -1,5 +1,6 @@
 Session-07
 ==========
+
 -> create a instance for backendend-server in aws with security and t3.micro services.
 -> connect to server with ssh on putty or other host machines with credentials(ec2-user, DevOps321)
 -> switch to root user, sudo su -
