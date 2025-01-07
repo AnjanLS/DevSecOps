@@ -1,0 +1,84 @@
+Session-08
+==========
+
+database-server
+---------------
+sudo su -
+dnf install mysql-server -y
+systemctl enable mysqld
+systemctl start mysqld
+mysql_secure_installation --set-root-pass ExpenseApp@1
+ps -ef | grep mysql
+netstat -lntp
+systemctl status mysqld
+mysql
+
+backend-server
+--------------
+sudo su -
+dnf module disable nodejs -y
+dnf module enable nodejs:20 -y
+dnf install nodejs -y
+useradd expense
+mkdir /app
+curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+cd /app
+unzip /tmp/backend.zip
+npm install
+vim /etc/systemd/system/backend.service
+
+[Unit]
+Description = Backend Service
+
+[Service]
+User=expense
+Environment=DB_HOST="<MYSQL-SERVER-PRIVATE-IPADDRESS>"
+ExecStart=/bin/node /app/index.js
+SyslogIdentifier=backend
+
+[Install]
+WantedBy=multi-user.target
+
+cat /etc/systemd/system/backend.service
+systemctl daemon-reload
+systemctl start backend
+systemctl enable backend
+systemctl status backend
+dnf install mysql -y
+mysql -h <DATABASE-PRIVATE-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
+systemctl restart backend
+systemctl status backend
+netstat -lntp
+ps -ef | grep node
+cd /var/log/
+ls -l
+cat messages
+
+frontend-server
+---------------
+sudo su -
+dnf install nginx -y
+systemctl enable nginx
+systemctl start nginx
+rm -rf /usr/share/nginx/html/*
+curl -o /tmp/frontend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+cd /usr/share/nginx/html/
+unzip /tmp/frontend.zip
+vim /etc/nginx/default.d/expense.conf
+
+proxy_http_version 1.1;
+
+location /api/ { proxy_pass http://<BACKEND-PRIVATE-IPADDRESS>:8080/; }
+
+location /health {
+  stub_status on;
+  access_log off;
+}
+
+cat /etc/nginx/default.d/expense.conf
+systemctl restart nginx
+netstat -lntp
+systemctl status nginx
+cd /var/log/nginx/
+ls -l
+cat access.log

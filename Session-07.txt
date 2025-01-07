@@ -56,7 +56,7 @@ FLUSH PRIVILEGES;
 -> we need to load the schema .sql file will connect to server ip and run the file, 
 mysql -h <MYSQL_SERVER_PRIVATE_IP-ADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
 -> and then we need to restart the service, systemctl restart backend
--> then we can interact with the sql command, mysql
+-> then we can interact with the sql command, mysql -h <DATABASE-PRIVATE-IPADDRESS> -u root -pExpenseApp@1
 -> we can confirm the mysql running port usually backend app will run on port 8080, netstat -lntp
 -> then backend and database will connect each other 
 
