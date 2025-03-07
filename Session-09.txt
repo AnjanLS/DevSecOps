@@ -1,0 +1,89 @@
+Session-09
+==========
+
+1. What is Telnet? 
+-> Telnet is a network protocol that allows users to remotely access and manage devices and systems. This is a kind of Troubleshooting to confirm connectivity.
+   It's used for a variety of purposes, including troubleshooting, network management, and remote administration.
+   eg:- telnet <db-IP> 3306 -> If DB is running but backend is unable to connect for DB then we need to check DB security group ingress rules.
+		ping <IP> -> to test network connectivity and troubleshoot network issues
+		curl http://localhost:8080/health -> this is the health check, same server == localhost == 127.0.0.1
+		telnet <backend-IP> 8080 -> To confirm backend, which is connected to the frontend server.
+		netstat -lntp -> To confirm active Internet connections(only servers)
+		
+HTTP Methods and Status Codes
+=============================
+CRUD operations
+
+GET -> getting/read from server
+POST -> posting/create a record(information)
+PUT -> update the information
+DELETE -> delete the record/information
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#informational_responses
+100 - 1xx -> informational responses - signifying that the server has received a client request and is currently processing it
+200 - 2xx -> success status code - means that the request was successful
+300 - 3xx -> redirectional - a response code from a server that tells a browser to automatically redirect a request to a different URL
+400 - 4xx -> client side error - indicate that there was an issue with the client's request. 
+500 - 5xx -> server side error - represent errors, they are also referred to as HTTP Error Codes.
+
+anjansriram.shop - 404 - NOTFOUND - clinet side error
+403 - FORBIDDEN - you don't have access to that
+401 - unauthorized - trying to login without credentials
+405 - HTTP POST, If you use GET - method not allowed 
+400 - bad request - check the payload data(json data) once again
+
+500 - Internal server error - any issues between backend to database, server side error
+502 - Bad Gateway - frontend not able to connect backend
+503 - service temporarily unavailable
+
+
+2. How to check memory of linux server? memory == RAM
+-> free -> It will shows the info in bytes
+   free -h -> It is a human readable format
+   top -> which shows that memory consume info
+   htop -> it will apply colors and shows very attractive/ task manager
+   cat /proc/meminfo -> calculate every related file data and shows
+   
+3. RAM vs ROM: Key Differences?
+Feature				RAM (Random Access Memory)								ROM (Read-Only Memory)
+---------------------------------------------------------------------------------------------------------------------------------------
+Definition			Temporary, high-speed memory used for active processes	Permanent memory storing firmware and system instructions
+Volatility			Volatile (data is lost when power is off)				Non-volatile (retains data even when power is off)
+Speed				Extremely fast											Slower than RAM but faster than secondary storage
+Usage				Stores active processes, apps, and system data			Stores firmware (BIOS, bootloader, embedded software)
+Read/Write			Read & Write (frequently changes)						Mostly Read-Only (some ROMs allow updates)
+Types				DRAM, SRAM												PROM, EPROM, EEPROM, Flash ROM
+Example in Devices	Running apps on a phone or PC	
+
+-> Temporary storage for calculations | - BIOS/UEFI in computers
+-> Firmware in microcontrollers
+-> Boot ROM in smartphones |
+
+4. Where Are RAM and ROM Used?
+RAM -> Used by operating systems and applications for temporary data storage (e.g., running apps).
+ROM -> Stores permanent system instructions (e.g., boot firmware in PCs, firmware in embedded systems).   
+
+5. What is Extended RAM?
+-> Extended RAM (Virtual RAM) is a feature that allows a device to use a portion of its internal storage (eMMC/UFS/SSD) as temporary RAM 
+   when the physical RAM is full. It helps improve multitasking but is slower than real RAM because storage is not as fast as RAM.
+   swap - reserved RAM from hard-disk
+   In chrome, some unused tabs will placed on swap later on if you access then placed on RAM
+   
+6. How do you list top 10 high memory process?
+-> ps aux --sort -%mem -> it will list out all the high memory usage files
+   ps aux --sort -%mem | head -n 10 -> it will display top 10 in the list
+
+7. Disk usage?
+-> df -hT -> human readable format and it's type
+   du -sh -> it will shows the disk usage files
+   du -sh /* -> check from the root volume wich file will took more disk usage
+   du -sh /usr/* -> we can also check inside the files/directories which will consume more memory
+   du - sh * -> whithin a folder it shows all the memory consumed files
+   
+-> cat /proc/cpuinfo - it will shows the cpu info
+-> netstat - network statitics
+-> https://github.com/DAWS-82S/concepts/blob/main/linux-filesystem.MD check for more related file structure info...
+-> https://www.freecodecamp.org/news/the-linux-booting-process-6-steps-described-in-detail/ check for more details about linux booting info...
+
+8. How does linux booting process works?
+-> https://www.youtube.com/watch?v=XpFsMB6FoOs   
