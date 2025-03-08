@@ -77,3 +77,11 @@ Popular Version Control Tools
 -> SVN (Subversion) – A centralized version control system used in enterprises.
 -> Mercurial – Another DVCS, similar to Git but with a different workflow.
 
+shell scripting
+---------------
+.sh -> shell script extension
+1. what is shebang? 
+-> #! that appears at the beginning of a script file and It's also known as hashbang, sha-bang, pound-bang, or hash-pling. It is a 
+   Interpreter to execute the commands ans syntax inside a shell-script. 
+-> Before they have several types c shell, k shell, z shell, shell but now all is converted into bash.
+-> /bin a folder that contains executable files, or binaries, that are essential to the operating system.
