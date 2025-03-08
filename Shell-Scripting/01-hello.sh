@@ -1,3 +1,6 @@
 #!/bin/bash
 
-echo "Hello-world"
+#printing statements
+echo "Hello-world!"
+echo "welcome to devops-practice"
+echo scripting language
