@@ -40,6 +40,9 @@ origin means remote repo, and the branch is currently using main
    
 10. git log - which contains the info related to the commits.
 
+11. git commit
+	git pull origin main - used to pull the changes from remote to local server/host.
+
 ----------------------------------------------- ----------------------------------------------
 Local machine --> Staging area --> Local repo | |--> Remote repo --> clone to other machines |
 ----------------------------------------------- ----------------------------------------------
@@ -95,7 +98,7 @@ shell scripting
    Interpreter to execute the commands and syntax inside a shell-script. 
 -> Before they have several types c shell, k shell, z shell, shell but now all is converted into bash.
 -> /bin a folder that contains executable files, or binaries, that are essential to the operating system.
--> we can't the script file in windows machine, we can run script file in linux machines/bash by sh <file-name>, bash <file-name>,
+-> we can't execute the script file in windows machine, we can run script file in linux machines/bash by sh <file-name>, bash <file-name>,
    ./<file-name> - for this we need chnage in execute mode then only we can execute the file.
 
 2. printing statements?
