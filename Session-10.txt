@@ -130,3 +130,8 @@ shell scripting
 		echo "$PERSON1 :: I am doing great! Thanks for asking."
 		echo "$PERSON2 :: ok bye! $PERSON1"
 	while running need to do declare variables ./<file-name> <var1> <var2>
+   eg4: PERSON1=anjan
+		echo "your username::$PERSON1"
+		echo "please enter your password::$PASSWORD"
+		read -s PASSWORD  # -s means secure the input without showing
+		echo "password entered: $PASSWORD" 
