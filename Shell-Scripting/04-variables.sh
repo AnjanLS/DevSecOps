@@ -3,5 +3,5 @@
 PERSON1=anjan
 echo "your username::$PERSON1"
 echo "please enter your password::$PASSWORD"
-read PASSWORD
-echo "password entered: $PASSWORD"
+read -s PASSWORD
+echo "password entered: $PASSWORD" 
