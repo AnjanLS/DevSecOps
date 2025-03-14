@@ -1,7 +1,7 @@
 #!/bin/bash
 
-PERSON1=ramesh #variables declare and passing method
-PERSON2=suresh
+PERSON1=$1 #user input method by arg
+PERSON2=$2
 
 echo "$PERSON1 :: Hi, How are you $PERSON2?"
 echo "$PERSON2 :: Hello $PERSON1, I am fine."

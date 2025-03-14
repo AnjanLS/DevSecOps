@@ -108,4 +108,15 @@ shell scripting
    echo welcome to devops-practice 
    
 3. variables?
--> 
+-> It is a name given to a memory location/ a centralise place to mention the values, If you change at 1 place, It will reflect at all 
+   other places where it is reffered.
+   eg1: a=1, b=2
+   DRY == Don't Repeat Yourself
+   eg2: PERSON1=ramesh
+		PERSON2=suresh
+
+		echo "$PERSON1 :: Hi, How are you $PERSON2?"
+		echo "$PERSON2 :: Hello $PERSON1, I am fine."
+		echo "$PERSON2 :: how are you doig? $PERSON1"
+		echo "$PERSON1 :: I am doing great! Thanks for asking."
+		echo "$PERSON2 :: ok bye! $PERSON1"
