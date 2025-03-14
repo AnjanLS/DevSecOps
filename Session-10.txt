@@ -9,6 +9,7 @@ Session-10
    
 -> Git Implementations are Github, Gitlab, Bitbucket, Azure repos, AWS code commit etc, only user Interface is different but all 
    commands are same.
+-> When we are using git for commit for the first time need to mention credentials, then only we can access to remote.
 
 steps to follow for project Implementations through git
 -------------------------------------------------------
@@ -29,6 +30,15 @@ git add . -> all files will be added to the staging area
 git commit -m "message"
 
 7. git push origin main
+origin means remote repo, and the branch is currently using main
+
+8. To clone/download into the local machine from the remote repo
+   git clone <url>
+   
+9. we can also execute like this
+   git add . ; git commit -m "first-commit" ; git push origin main
+   
+10. git log - which contains the info related to the commits.
 
 ----------------------------------------------- ----------------------------------------------
 Local machine --> Staging area --> Local repo | |--> Remote repo --> clone to other machines |
@@ -85,3 +95,14 @@ shell scripting
    Interpreter to execute the commands and syntax inside a shell-script. 
 -> Before they have several types c shell, k shell, z shell, shell but now all is converted into bash.
 -> /bin a folder that contains executable files, or binaries, that are essential to the operating system.
+-> we can't the script file in windows machine, we can run script file in linux machines/bash by sh <file-name>, bash <file-name>,
+   ./<file-name> - for this we need chnage in execute mode then only we can execute the file.
+
+2. printing statements?
+-> we can write the printing statements with/without using double quotes.
+   #!/bin/bash                       #first will be the shebang/Interpreter and the bash name
+   echo "Hello-world!"
+   echo welcome to devops-practice 
+   
+3. variables?
+-> 
