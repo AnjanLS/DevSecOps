@@ -1,0 +1,44 @@
+Session-11
+----------
+
+1. what are Datatypes?
+-> In Shell Scripting (Bash, Sh), variables do not have explicit data types(int,float,bin,oct,hex) like in other programming languages (e.g., Python, Java). 
+   Instead, everything is treated as a string by default, but the interpretation of the value can change based on how it is used.
+   
+Types of Data in Shell Scripting
+---------------------------------
+Even though Bash doesn't have strict data types, we can categorize them based on usage:
+
+a. String (Default) - Everything is a string unless used otherwise.
+   eg:#!/bin/bash
+	  name="Alice"
+	  echo "Hello, $name"
+
+b. Integer (Numbers) - Bash doesn’t support native integer data types, but we can use let, expr, or $(( )) for arithmetic.
+   eg:#!/bin/bash
+	  num1=10
+	  num2=5
+	  sum=$((num1 + num2))  # Arithmetic operation
+	  echo "Sum: $sum"
+	  
+c. Array - In array() we can't increase the size but in arraylist[] we can increase the size.
+   eg:#!/bin/bash
+	  fruits=("Apple" "Banana" "Cherry")
+	  echo "First fruit: ${fruits[0]}"
+	  echo "All fruits: ${fruits[@]}"
+	  
+d. Associative Array (Dictionary/Key-Value Pair)
+   eg:#!/bin/bash
+	  declare -A person
+	  person[name]="Alice"
+	  person[age]=25
+	  echo "Name: ${person[name]}"
+	  echo "Age: ${person[age]}"
+	  
+e. Boolean (Using Exit Codes) - Bash treats 0 as "true" and non-zero as "false".
+   eg:#!/bin/bash
+	  if [ -f "/etc/passwd" ]; then
+		  echo "File exists"  # Exit status 0 (true)
+	  else
+		  echo "File does not exist"  # Exit status non-zero (false)
+	  fi

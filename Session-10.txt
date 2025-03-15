@@ -130,7 +130,8 @@ shell scripting
 		echo "$PERSON1 :: I am doing great! Thanks for asking."
 		echo "$PERSON2 :: ok bye! $PERSON1"
 	while running need to do declare variables ./<file-name> <var1> <var2>
-   eg4: echo "please enter your username::"
+   eg4: read is a user input method we can declare the variables in runtime.
+		echo "please enter your username::"
 		read -s USERNAME
 		echo "username entered: $USERNAME"
 		echo "please enter your password: " 
