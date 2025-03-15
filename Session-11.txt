@@ -16,18 +16,28 @@ a. String (Default) - Everything is a string unless used otherwise.
 
 b. Integer (Numbers) - Bash doesn’t support native integer data types, but we can use let, expr, or $(( )) for arithmetic.suppose 
                        if we pass any string along with integer, instead of error those string will be treated as 0.
-   eg:#!/bin/bash
-	  num1=10
-	  num2=5
-	  sum=$((num1 + num2))  # Arithmetic operation
-	  echo "Sum: $sum"
+   eg1:#!/bin/bash
+	   number1=$1
+	   number2=$2
+	   TIMESTAMP=$(date)
+	   echo "script executed at: $TIMESTAMP"
+	   sum=$(($number1+$number2))
+	   echo "sum of $number1 and $number2 is: $sum"
+   eg2:#!/bin/bash
+       number1=6
+       number2=anjan # any string will be treated as 0 
+       echo script will be executed at $(date)
+       sum=$(($number1+$number2))
+       echo "sum of $number1 and $number2 is: $sum"
 	  
 c. Array - In array() we can't increase the size but in arraylist[] we can increase the size, In array index starts from 0 & count starts from 1
    eg:#!/bin/bash
-	  fruits=("Apple" "Banana" "Cherry")
-	  echo "First fruit: ${fruits[0]}"
-	  echo "Last fruit: ${fruits[-1]}"
-	  echo "All fruits: ${fruits[@]}"
+	  cars=("mustang" "Ferrari" "rolls-royce" "mitsubishi")
+	  echo my car collections are: ${cars[@]}
+	  echo "my first car collection is: ${cars[0]}"
+	  echo "my second car collection is: ${cars[1]}"
+	  echo "my last car collection is: ${cars[-1]}"
+	  echo "my total car collections are: ${#cars[@]}" #counting total numbers in an array
 	  
 d. Associative Array (Dictionary/Key-Value Pair)
    eg:#!/bin/bash
