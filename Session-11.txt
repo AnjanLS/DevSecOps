@@ -14,7 +14,8 @@ a. String (Default) - Everything is a string unless used otherwise.
 	  name="Alice"
 	  echo "Hello, $name"
 
-b. Integer (Numbers) - Bash doesn’t support native integer data types, but we can use let, expr, or $(( )) for arithmetic.
+b. Integer (Numbers) - Bash doesn’t support native integer data types, but we can use let, expr, or $(( )) for arithmetic.suppose 
+                       if we pass any string along with integer, instead of error those string will be treated as 0.
    eg:#!/bin/bash
 	  num1=10
 	  num2=5
