@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cars=(mustang,ferrari,rolls-royce,mitsubishi)
+cars=("mustang","Ferrari","rolls-royce","mitsubishi")
 
 echo "car collection is ${cars}"
