@@ -8,3 +8,4 @@ then
 echo "both variables are same"
 else
 echo "both variables are not same"
+fi
