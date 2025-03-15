@@ -3,7 +3,7 @@
 m=1
 n=2
 
-if [ $m -ls $n ]
+if [ $m -lt $n ]
 then 
 echo "$m is lesser than $n"
 else
