@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo "my present working directory is: $pwd"
+echo "my present working directory is: $PWD" #or $(pwd)
