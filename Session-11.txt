@@ -22,7 +22,7 @@ b. Integer (Numbers) - Bash doesn’t support native integer data types, but we 
 	  sum=$((num1 + num2))  # Arithmetic operation
 	  echo "Sum: $sum"
 	  
-c. Array - In array() we can't increase the size but in arraylist[] we can increase the size.
+c. Array - In array() we can't increase the size but in arraylist[] we can increase the size, In array index starts from 0 & count starts from 1
    eg:#!/bin/bash
 	  fruits=("Apple" "Banana" "Cherry")
 	  echo "First fruit: ${fruits[0]}"
