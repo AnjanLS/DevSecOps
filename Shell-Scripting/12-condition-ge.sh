@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "please enter your score: "
 read SCORE
 marks=$SCORE
 if [ $marks -gt 35 ] ; then
