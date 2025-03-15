@@ -26,6 +26,7 @@ c. Array - In array() we can't increase the size but in arraylist[] we can incre
    eg:#!/bin/bash
 	  fruits=("Apple" "Banana" "Cherry")
 	  echo "First fruit: ${fruits[0]}"
+	  echo "Last fruit: ${fruits[-1]}"
 	  echo "All fruits: ${fruits[@]}"
 	  
 d. Associative Array (Dictionary/Key-Value Pair)
