@@ -6,3 +6,5 @@ echo "current date and time is: $(date)"
 echo current user is: $USER
 echo script name is: $0
 echo process id of current script: $$
+echo process id of last cmd in background: $!
+echo status: $1
