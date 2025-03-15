@@ -3,6 +3,6 @@
 cars=("mustang" "Ferrari" "rolls-royce" "mitsubishi")
 
 echo my car collections are: ${cars[@]}
-echo "first car is:${cars[0]}"
-echo "second car is:${cars[1]}"
-echo "last car is:${cars[-1]}"
+echo "my first car collection is: ${cars[0]}"
+echo "my second car collection is: ${cars[1]}"
+echo "my last car collection is: ${cars[-1]}"
