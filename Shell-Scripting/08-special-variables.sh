@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "number of variables: $#"
-echo "First Argument: $1"  #we need to pass some variables during runtime
+echo "First Argument: $1"  #pass some variables during runtime sh 08-special-variables.sh hello world
 echo "Second Argument: $2"
 echo "All Arguments: $@"
 echo "my present working directory is: $PWD" #or $(pwd)
