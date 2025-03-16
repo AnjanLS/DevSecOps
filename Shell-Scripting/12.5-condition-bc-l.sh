@@ -1,12 +1,12 @@
 #!/bin/bash
 
-echo "please enter your score: "
+echo "Please enter your score: "
 read SCORE
-marks=$(echo "$SCORE" | bc)
-if (( $(echo "$marks > 35" | bc -l) )); then
-echo "great! you are pass."
-elif (( $(echo "$marks == 35" | bc -l) )); then
-echo "you are pass."
+
+if [ "$(echo "$SCORE > 35" | bc -l)" -eq 1 ]; then
+    echo "Great! You passed."
+elif [ "$(echo "$SCORE == 35" | bc -l)" -eq 1 ]; then
+    echo "You passed."
 else
-echo "you are fail"
+    echo "You failed."
 fi
