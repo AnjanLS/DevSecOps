@@ -72,3 +72,41 @@ f. Special variables
 	  ls ./Shell-Scripting
 	  echo "Exit Status of Last Command: $?"
 	  echo "Random Number: $RANDOM"
+	  
+2. what is conditions?types?
+-> conditions are used to control the flow of the program, it allow scripts to make decision and execute some block of code when the 
+   condition is satisfied.
+   eg:if-else condition
+      -----------------
+	  #!/bin/bash
+      if [ condition ]; then
+	  echo " "
+	  else
+	  echo " "
+	  fi
+   eg:if-elif condition
+      -----------------
+	  #!/bin/bash
+	  if [ condition ]; then
+	  echo " "
+	  elif [ condition ]; then
+      echo " " 
+      else
+      echo " "
+	  fi
+   eg:while condition
+      ---------------
+      start
+      while [ condition ]; do 
+      echo " "
+      end
+      done
+	  
+3. automate script to install mysql
+-> #!/bin/bash
+   if [ condition ]; then
+   sudo su -
+   dnf install mysql -y
+   else 
+   echo "error with a correct info"
+   fi
