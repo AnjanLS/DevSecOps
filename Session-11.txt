@@ -103,10 +103,63 @@ f. Special variables
       done
 	  
 3. automate script to install mysql
--> #!/bin/bash
-   if [ condition ]; then
-   sudo su -
-   dnf install mysql -y
-   else 
-   echo "error with a correct info"
-   fi
+->  #!/bin/bash
+	USERID=$(id -u)
+	if [ $USERID -ne 0 ]; then
+		echo "ERROR:: You must have sudo access to execute the script"
+		exit 1
+	fi
+	dnf list installed mysql
+	if [ $? -ne 0 ]; then
+		dnf install mysql -y
+		if [ $? -ne 0 ]; then
+			echo "Installing Mysql... Failure"
+			exit 1
+		else
+			echo "Installing Mysql... Success"
+		fi
+	else
+		echo "mysql is already Installed"
+	fi
+	dnf list installed git
+	if [ $? -ne 0 ]; then
+		dnf install git -y
+		if [ $? -ne 0 ]; then
+			echo "Installing Git... Failure"
+			exit 1
+		else
+			echo "Installing Git... Success"
+		fi
+	else
+		echo "Git is already Installed"
+	fi
+
+Explanation Steps
+------------------
+dnf install mysqlll -y
+
+check if the user running the script is root user or not
+if root user
+	allow him
+else
+	show the error properly and exit the script
+run install command
+check installation is success
+if success, our task is done
+if not success, throw the error message
+
+exit status
+------------
+How can you check previous command is success or not in shell script?
+
+by checking the exit status, if exit status is 0 it is success, otherwise it is failure
+
+$?
+
+20 things to fill
+
+reduce number of lines, get the same productivity
+
+<
+
+mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
