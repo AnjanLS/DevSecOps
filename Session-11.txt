@@ -104,34 +104,36 @@ f. Special variables
 	  
 3. automate script to install mysql
 ->  #!/bin/bash
-	USERID=$(id -u)
+	USERID=$(id -u)    #check the user id 
 	if [ $USERID -ne 0 ]; then
-		echo "ERROR:: You must have sudo access to execute the script"
-		exit 1
+		echo "Error:: you must have sudo access to privilage the script."
+		exit 1    #Failure occurs terminate the script without continuing
 	fi
-	dnf list installed mysql
-	if [ $? -ne 0 ]; then
-		dnf install mysql -y
-		if [ $? -ne 0 ]; then
-			echo "Installing Mysql... Failure"
-			exit 1
+	#My method
+	dnf list installed mysql     #To check wheather it is installed/not
+	if [ $? -ne 0 ]; then        #check previous cmd execute status
+		if [ $USERID -ne 0 ]; then
+			dnf install mysql -y      #Installation cmd
+			echo "Successfully Installed Mysql.."
 		else
-			echo "Installing Mysql... Success"
+			echo "Mysql.. Installation Failure"
+			exit 1    #Failure occurs terminate the script without continuing
 		fi
 	else
-		echo "mysql is already Installed"
+		echo "Mysql... is already Installed"
 	fi
-	dnf list installed git
-	if [ $? -ne 0 ]; then
-		dnf install git -y
-		if [ $? -ne 0 ]; then
-			echo "Installing Git... Failure"
-			exit 1
+	#daws method
+	dnf list installed git       #To check wheather it is installed/not
+	if [ $? -ne 0 ]; then        #check previous cmd execute status
+		dnf install git -y      #Installation cmd
+		if [ $? -ne 0 ]; then 
+			echo "Git.. Installation Failure" 
+			exit 1    #Failure occurs terminate the script without continuing      
 		else
-			echo "Installing Git... Success"
+			echo "Successfully Installed Git.."
 		fi
 	else
-		echo "Git is already Installed"
+		echo "Git... is already Installed"
 	fi
 
 Explanation Steps
