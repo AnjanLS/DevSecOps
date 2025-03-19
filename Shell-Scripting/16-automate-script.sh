@@ -12,6 +12,7 @@ if [ $? -ne 0 ]; then
         echo "Successfully Installed Mysql.."
     else
         echo "Mysql.. Installation Failure"
+    fi
 else
     echo "Mysql... is already Installed"
 fi
