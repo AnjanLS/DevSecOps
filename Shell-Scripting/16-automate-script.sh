@@ -2,7 +2,7 @@
 
 USERID=$(id -u)
 if [ $USERID -ne 0 ]; then
-    echo "Error:: you don't have root previlage to Install the apps"
+    echo "Error:: you must have sudo access to privilage the script."
 fi
 
 dnf list installed mysql

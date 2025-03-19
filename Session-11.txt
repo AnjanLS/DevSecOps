@@ -148,18 +148,8 @@ check installation is success
 if success, our task is done
 if not success, throw the error message
 
-exit status
-------------
-How can you check previous command is success or not in shell script?
+4. exit status/How can we check previous command is success or not in shell script?
+-> echo $? - if exit status is 0 it is success, otherwise it is failure
 
-by checking the exit status, if exit status is 0 it is success, otherwise it is failure
-
-$?
-
-20 things to fill
-
-reduce number of lines, get the same productivity
-
-<
-
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
+-> The primary intention of coding in shell scripts or any other programming language is to minimize the number of lines while 
+   maintaining the same level of productivity.
