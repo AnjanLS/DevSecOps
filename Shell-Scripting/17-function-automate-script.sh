@@ -24,6 +24,15 @@ else
 fi
 
 
+dnf list installed mysql-server
+if [ $? -ne 0 ]; then
+    dnf install mysql-server -y
+    VALIDATE $? "Installing mysql-server"
+else
+    echo "mysql-server... is already Installed"
+fi
+
+
 dnf list installed git       #To check wheather it is installed/not
 if [ $? -ne 0 ]; then        #check previous cmd execute status
     dnf install git -y      #Installation cmd
