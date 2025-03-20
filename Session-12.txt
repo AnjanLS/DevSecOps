@@ -1,0 +1,47 @@
+Session-12
+----------
+1. what is function?
+-> function is a reusable block of code that performs a specific task, It helps in reducing redundancy, Improving code maintainability,
+   and making scripts more modular and maintainable.
+   SYNTAX-1 with function keyword: 
+   -------------------------------
+   function function_name()
+   {
+	  #function_body
+   }
+   
+   SYNTAX-2 without function keyword:
+   ----------------------------------
+   function_name()
+   {
+	  #function_body
+   }
+   
+   Ex for positional parameter:
+   ----------------------------
+   #!/bin/bash
+   greet()
+   {
+		echo "Hello, $1!"      #$1 is a positional parameter represent the first argument passed to the function.
+   }
+   greet "Alice"
+
+2.  WAP for summation of 2 numbers.
+->  A function can return a status code (0 for success, non-zero for failure) using return:
+	#!/bin/bash
+	add_numbers() {
+		sum=$(( $1 + $2 ))
+		return $sum  # Returns only numeric values (0-255)
+	}
+
+	add_numbers 5 10
+	echo "Sum is $? (Limited to 0-255)"
+	
+	For larger return values, use echo:
+	#!/bin/bash
+	add_numbers() {
+    echo $(( $1 + $2 ))
+	}
+
+	result=$(add_numbers 5 10)
+	echo "Sum is $result"
