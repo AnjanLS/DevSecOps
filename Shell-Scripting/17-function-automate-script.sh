@@ -6,9 +6,9 @@ if [ $USERID -ne 0 ]; then
     exit 1    #Failure occurs terminate the script without continuing
 fi
 
-R=\e[31m
-G=\e[32m
-Y=\e[33m
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
 
 VALIDATE(){
     if [ $1 -ne 0 ]; then 
