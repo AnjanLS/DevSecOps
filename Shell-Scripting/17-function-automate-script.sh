@@ -6,12 +6,16 @@ if [ $USERID -ne 0 ]; then
     exit 1    #Failure occurs terminate the script without continuing
 fi
 
+R=\e[31m
+G=\e[32m
+Y=\e[33m
+
 VALIDATE(){
     if [ $1 -ne 0 ]; then 
-        echo "$2 is Failure..." 
+        echo -e "$2 is $R Failure..." 
         exit 1    #Failure occurs terminate the script without continuing      
     else
-        echo "$2 is Success..."
+        echo -e "$2 is $G Success..."
     fi
 }
 
@@ -20,7 +24,7 @@ if [ $? -ne 0 ]; then        #check previous cmd execute status
     dnf install mysql -y      #Installation cmd
     VALIDATE $? "Installing Mysql"
 else
-    echo "Mysql... is already Installed"
+    echo -e "Mysql... is already $Y Installed"
 fi
 
 
@@ -29,7 +33,7 @@ if [ $? -ne 0 ]; then
     dnf install mysql-server -y
     VALIDATE $? "Installing mysql-server"
 else
-    echo "mysql-server... is already Installed"
+    echo -e "mysql-server... is already $Y Installed"
 fi
 
 
@@ -38,5 +42,7 @@ if [ $? -ne 0 ]; then        #check previous cmd execute status
     dnf install git -y      #Installation cmd
     VALIDATE $? "Installing git"
 else
-    echo "Git... is already Installed"
+    echo -e "Git... is already $Y Installed"
 fi
+
+
