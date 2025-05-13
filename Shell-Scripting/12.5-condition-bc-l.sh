@@ -1,5 +1,6 @@
 #!/bin/bash
 
+sudo dnf install bc -y
 echo "Please enter your score: "
 read SCORE
 
