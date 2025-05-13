@@ -1,13 +1,17 @@
 #!/bin/bash
 
-sudo dnf install bc -y
-echo "Please enter your score: "
-read SCORE
-
-if [ "$(echo "$SCORE > 35" | bc -l)" -eq 1 ]; then
-    echo "Great! You passed."
-elif [ "$(echo "$SCORE == 35" | bc -l)" -eq 1 ]; then
-    echo "You passed."
+dnf list installed bc
+if [ $? -ne 0 ]; then
+    sudo dnf install bc -y
 else
-    echo "You failed."
+    echo "Please enter your score: "
+    read SCORE
+
+    if [ "$(echo "$SCORE > 35" | bc -l)" -eq 1 ]; then
+        echo "Great! You passed."
+    elif [ "$(echo "$SCORE == 35" | bc -l)" -eq 1 ]; then
+        echo "You passed."
+    else
+        echo "You failed."
+    fi
 fi
