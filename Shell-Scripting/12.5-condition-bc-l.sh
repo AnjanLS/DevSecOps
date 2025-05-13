@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dnf list installed bc > /dev/null 2>&1
+dnf list installed bc > /dev/null 2>&1  #it will not display this cmd list
 if [ $? -ne 0 ]; then
     sudo dnf install bc -y
 else

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-age=25
+echo "please enter your age for voting!"
+read AGE
+age=$AGE
 country="USA"
 
 if [ $age -ge 18 ] && [ "$country" == "USA" ]; then
