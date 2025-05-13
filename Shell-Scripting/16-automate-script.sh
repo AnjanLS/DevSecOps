@@ -10,7 +10,6 @@ fi
 dnf list installed mysql     #To check wheather it is installed/not
 if [ $? -ne 0 ]; then        #check previous cmd execute status
     if [ $USERID -ne 0 ]; then
-        sudo apt update
         dnf install mysql -y      #Installation cmd
         echo "Successfully Installed Mysql.."
     else
