@@ -46,9 +46,9 @@ else
 fi
 
 dnf list installed sysstat
-if [$? -ne 0]; then
+if [ $? -ne 0 ]; then
     dnf install sysstat -y
-    VALIDATE $? "Installing iostat"
+    VALIDATE $? "Installing sysstat"
 else
     echo -e "sysstat... is already $Y Installed"
 
