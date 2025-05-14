@@ -51,5 +51,6 @@ if [ $? -ne 0 ]; then
     VALIDATE $? "Installing sysstat"
 else
     echo -e "sysstat... is already $Y Installed"
+fi
 
 
