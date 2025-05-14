@@ -73,14 +73,14 @@ connect from git-bash - ssh ec2-user@<IP-address> -> (password)DevOps321
 
 vpn forward proxy
 -----------------
--> vpn is used to access the data which is permitted in their region, when we are using vpn in our machine server is not aware that client is using 
-vpn, client is aware of vpn.
+-> vpn is used to access the data which is permitted in their region, when we are using vpn in our machine server is not aware that 
+client is using vpn, client is aware of vpn.
 -> this is used to traffic restrict, traffic monitoring, geolocation hiding, anonymous client, access private network/files
 
 vpn reverse proxy
 -----------------
--> when we are accessing any public domain like facebook it have reverse proxy/web server which forward the client requests to fb application. client 
-is not aware of proxy but server is aware of proxy.
+-> when we are accessing any public domain like facebook it have reverse proxy/web server which forward the client requests to fb application. 
+client is not aware of proxy but server is aware of proxy.
 -> backend applications are behind reverse proxy servers for security, queing and cache servers
 
 write a blogs for 

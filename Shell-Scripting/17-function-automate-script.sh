@@ -45,4 +45,11 @@ else
     echo -e "Git... is already $Y Installed"
 fi
 
+dnf list installed iostat
+if [$? -ne 0]; then
+    dnf install iostat -y
+    VALIDATE $? "Installing iostat"
+else
+    echo -e "iostat... is already $Y Installed"
+
 

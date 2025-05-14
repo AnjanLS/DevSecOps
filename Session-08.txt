@@ -85,6 +85,11 @@ cat access.log
 less access.log - to see a limited info 
 tail -f access.log - it will fetch the last 10 lines of log
 
+Check if nginx Failed - port 80 will be available for nginx to run web-server, If it's port is aquried by other process just kill it.
+check the port status -  netstat -tuln | grep :80
+kill the nginx web-server -   pkill nginx
+restart the web-server -  systemctl restart nginx
+
 DNS (Domain name system)
 ------------------------
 1. what is DNS?
@@ -127,6 +132,9 @@ private IP - but when terminate and recreate again private IP will changes
    top-level domain (TLD), now aws manages my domain.
 -> We can create a new record in AWS by using the MySQL private IP. Then, we configure the record name in the backend:
    mysql.anjansriram.shop → DNS Resolver → .shop TLD → Provides nameservers to anjansriram.shop → A record (stores the database server's private IP).
+
+-> Create a Hosted zone with domain name & no need other details - anjansriram.shop 
+
 
 Record Types
 ============

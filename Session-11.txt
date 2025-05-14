@@ -30,7 +30,8 @@ b. Integer (Numbers) - Bash doesn’t support native integer data types, but we 
        sum=$(($number1+$number2))
        echo "sum of $number1 and $number2 is: $sum"
 	  
-c. Array - In array() we can't increase the size but in arraylist[] we can increase the size, In array index starts from 0 & count starts from 1
+c. Array - In array() we can't increase the size but in arraylist[] we can increase the size, In array index starts from 0 & count 
+           starts from 1
    eg:#!/bin/bash
 	  cars=("mustang" "Ferrari" "rolls-royce" "mitsubishi")
 	  echo my car collections are: ${cars[@]}
