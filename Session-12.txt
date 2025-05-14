@@ -50,6 +50,24 @@ Session-12
 -> A script can use escape sequences to produce colored text on the terminal. Colors for text are represented by color codes, including,
    reset = 0, black = 30, red = 31, green = 32, yellow = 33, blue = 34, magenta = 35, cyan = 36, and white = 37
    eg: echo -e "I am robot, \e[31m Hello world!"    #display the text in red
-   
+
+history -> it will stores the cmd which we executed on the terminal.
+
 Logs -> files or records that document events, activities, and operations within a system, application, or network device, used for 
 troubleshooting, monitoring, and security purposes. 
+
+In shell-script,
+< = Input
+ex: sort < unsorted.txt	#we are passisng the txt data for sorting
+> = Output
+ex: ls -l > output.log
+	cat output.log	#it will stores the list of data by the cmd ls
+	suppose if i use like this
+	ls -l 1> output.log	#1 means if cmd will success then only it stores the data in the .log files
+	ls -l 2> output.log	#2 means if cmd will fails then only it display the data & not stores in the .log files
+	ls -l &> output.log	#& means if cmd will success/failure it stores the data in the .log files everytime it will replace
+	ls -l &>> output.log	#& means if cmd will success/failure it stores the data in the .log files everytime >> it will not replace
+	
+echo "anjansriram.98@gmail.com" | cut -d "." -f1 &>>names.txt
+-d means delimiter whenever it appears split & means ture/false >> means append totally appending the name to .txt file
+
