@@ -32,7 +32,7 @@ if [ $? -ne 0 ]; then        #check previous cmd execute status
     dnf install mysql -y &>>$LOG_FILE_NAME     #Installation cmd
     VALIDATE $? "Installing Mysql"
 else
-    echo -e "Mysql... is already $Y Installed"
+    echo -e "Mysql... is already $Y Installed $N"
 fi
 
 
@@ -41,7 +41,7 @@ if [ $? -ne 0 ]; then
     dnf install mysql-server -y &>>$LOG_FILE_NAME
     VALIDATE $? "Installing mysql-server"
 else
-    echo -e "mysql-server... is already $Y Installed"
+    echo -e "mysql-server... is already $Y Installed $N"
 fi
 
 
@@ -50,7 +50,7 @@ if [ $? -ne 0 ]; then        #check previous cmd execute status
     dnf install git -y &>>$LOG_FILE_NAME     #Installation cmd
     VALIDATE $? "Installing git"
 else
-    echo -e "Git... is already $Y Installed"
+    echo -e "Git... is already $Y Installed $N"
 fi
 
 dnf list installed sysstat &>>$LOG_FILE_NAME
@@ -58,7 +58,7 @@ if [ $? -ne 0 ]; then
     dnf install sysstat -y &>>$LOG_FILE_NAME
     VALIDATE $? "Installing sysstat"
 else
-    echo -e "sysstat... is already $Y Installed"
+    echo -e "sysstat... is already $Y Installed $N"
 fi
 
 
