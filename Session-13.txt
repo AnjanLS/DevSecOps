@@ -1,0 +1,15 @@
+Session-13-deploying the app on the server
+------------------------------------------
+plain server -> app runtime(nodejs), create user, create app folder, download the code, install dependencies, create systemctl services,
+start the application.
+
+Before writing a script
+-----------------------
+- check user has root access/not
+- store logs
+- try to use colors
+- install mysql-server
+- enable it
+- start it
+- set the root password
+ 

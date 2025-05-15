@@ -74,6 +74,8 @@ echo "anjansriram.98@gmail.com" | cut -d "." -f1 &>>names.txt
 /DevSecOps/Shell-Scripting/18-logs.sh - automate the script to install packages & stores it in logs
 /var/log/shellscript-logs - path the log files are stored for a each run.
 sudo sh -x 18-logs.sh - To execute the shell-script file degub mode
+In DNS, TTL means Time TO Live
+directory .service file availabe in /etc/systemd/system
 
 4. what is loops?
 -> loops are used to execute block of code multiple times. they are essential for automation , repetation & iterating over data.
@@ -117,3 +119,4 @@ sudo sh -x 18-logs.sh - To execute the shell-script file degub mode
 		  break
 		done
 		
+we can automate the script by using loops also you can find it in https://github.com/AnjanLS/DevSecOps/blob/main/Shell-Scripting/20-automate-using-loops.sh
