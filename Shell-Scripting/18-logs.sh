@@ -24,37 +24,37 @@ VALIDATE(){
     fi
 }
 
-# echo "script started executing at: $TIMESTAMP" &>>$LOG_FILE
+echo "script started executing at: $TIMESTAMP" #&>>$LOG_FILE
 
-# dnf list installed mysql &>>$LOG_FILE     #To check wheather it is installed/not
-# if [ $? -ne 0 ]; then        #check previous cmd execute status
-#     dnf install mysql -y &>>$LOG_FILE     #Installation cmd
-#     VALIDATE $? "Installing Mysql"
-# else
-#     echo -e "Mysql... is already $Y Installed"
-# fi
+dnf list installed mysql #&>>$LOG_FILE     #To check wheather it is installed/not
+if [ $? -ne 0 ]; then        #check previous cmd execute status
+    dnf install mysql -y #&>>$LOG_FILE     #Installation cmd
+    VALIDATE $? "Installing Mysql"
+else
+    echo -e "Mysql... is already $Y Installed"
+fi
 
 
-dnf list installed mysql-server &>>$LOG_FILE
+dnf list installed mysql-server #&>>$LOG_FILE
 if [ $? -ne 0 ]; then
-    dnf install mysql-server -y &>>$LOG_FILE
+    dnf install mysql-server -y #&>>$LOG_FILE
     VALIDATE $? "Installing mysql-server"
 else
     echo -e "mysql-server... is already $Y Installed"
 fi
 
 
-dnf list installed git  &>>$LOG_FILE      #To check wheather it is installed/not
+dnf list installed git  #&>>$LOG_FILE      #To check wheather it is installed/not
 if [ $? -ne 0 ]; then        #check previous cmd execute status
-    dnf install git -y &>>$LOG_FILE      #Installation cmd
+    dnf install git -y #&>>$LOG_FILE      #Installation cmd
     VALIDATE $? "Installing git"
 else
     echo -e "Git... is already $Y Installed"
 fi
 
-dnf list installed sysstat &>>$LOG_FILE
+dnf list installed sysstat #&>>$LOG_FILE
 if [ $? -ne 0 ]; then
-    dnf install sysstat -y &>>$LOG_FILE
+    dnf install sysstat -y #&>>$LOG_FILE
     VALIDATE $? "Installing sysstat"
 else
     echo -e "sysstat... is already $Y Installed"
