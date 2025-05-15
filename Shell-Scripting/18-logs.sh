@@ -21,7 +21,7 @@ VALIDATE(){
         echo -e "$2 is $R Failure... $N" 
         exit 1    #Failure occurs terminate the script without continuing      
     else
-        echo -e "$2 is $G Success..."
+        echo -e "$N $2 is $G Success..."
     fi
 }
 
