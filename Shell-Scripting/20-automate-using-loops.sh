@@ -28,14 +28,15 @@ if [ $USERID -ne 0 ]; then
     exit 1    #Failure occurs terminate the script without continuing
 fi
 
-for package in $@;
+for package in $@
 do
     dnf list installed $package &>>$LOG_FILE_NAME
-    if [ $? -ne 0 ]; then
-        dnf install $package -y 
+    if [ $? -ne 0 ] 
+    then
+        dnf install $package -y &>>$LOG_FILE_NAME
         VALIDATE $? "Installing $package"
     else
-        echo -e " $package... is already $Y installed... $N"
+        echo -e " $package is already $Y installed... $N"
     fi
 done
 
