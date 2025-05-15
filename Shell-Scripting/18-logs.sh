@@ -9,7 +9,7 @@ fi
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
-N="\e[0m]"
+N="\e[0m"
 
 LOGS_FOLDER="/var/log/shellscript-logs"
 LOG_FILE=$(echo $0 | cut -d "." -f1)
@@ -21,7 +21,7 @@ VALIDATE(){
         echo -e "$2 is $R Failure... $N" 
         exit 1    #Failure occurs terminate the script without continuing      
     else
-        echo -e "$N $2 is $G Success..."
+        echo -e "$2 is $G Success..."
     fi
 }
 
