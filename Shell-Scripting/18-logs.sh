@@ -24,7 +24,7 @@ VALIDATE(){
     fi
 }
 
-echo "script started executing at $TIMESTAMP" &>>$LOG_FILE
+echo "script started executing at: $TIMESTAMP" &>>$LOG_FILE
 
 dnf list installed mysql &>>$LOG_FILE     #To check wheather it is installed/not
 if [ $? -ne 0 ]; then        #check previous cmd execute status
