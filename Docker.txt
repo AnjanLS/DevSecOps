@@ -1,0 +1,167 @@
+Docker
+======
+
+Introduction
+-------------
+- In olden Enterprise Frontend, Backend, Database and servlets are togeather, so the application size is also a big.
+- If any changes occurs in any servers, the whole applcation will be rebuild and rereleased/redeployed.
+- they will maintain release notes, ran different tests like dev, qa, uat, pre-prod and get the approval from the client.
+- After the approval, it will take 1 entire day for deployment and ran sanity tests after rebuild to check wheather it's working properly/not.
+
+- In modren Enterprise, all the servers are seperate and all are connected togeather through API and it's very easy to deploy.
+- In project there's a frequently changes/update happening in servers & all are connected togeather through API's.
+- No dependencies on each other and load on servers are decreased.  
+- uses monolothic restful API/services due to their simplicity and ease of deployment and uses HTTP methods and responses.
+- backend team uses single component(programming language) for project and the team works on different component like user, cart, order, 
+  shipping, payment, delivery, catalouge, reviews, recommendations etc.
+- when Angular js became popular and the Restful API's(HTTP's resposes) also populared for the project, this is called monolothic.
+
+Monolothic
+----------
+- Monolothic applications are single backend component should use single programming language.
+- All components togeather as a single component.
+- In monolothic application any small component error make the entire application down.
+- To overcome this Issue they Introduces microservices
+- High memory consumption
+
+Microservices
+-------------
+- In microservices, the project/application divided into multiple components.
+- <Frontendserver> -> loadbalancer -> components(user, cart, catalogue, shipping, payment)
+- In microservices uses loadbalancer to load the different component according to the API's like [cart.amazon.com, payment.amazon.com]
+- we can use multiple programming language to develop the each component and merge togeather.
+- client and server can use any programming language and easy to deployment.
+- easy to find resources on multiple languages and less memory consumption.
+
+Big application vs small application vs Induvidual
+---------------------------------------------------
+- Independent machine to host Big application -> size is very big -> old enterprise -> physical server(os->hardware) -> dedicated server
+- Physical server disadvantage is costly, waste of resources(RAM/HD), time consuming(Installation/configuration), maintanance(OS/network) etc.
+- Physical server advantage is complete privacy, single application.
+
+- Virtual machine to host small application -> application size is small -> modren enterprise -> VM's/Virtulization -> shared server
+  (Hardware -> Host OS -> hypervisor -> guest OS -> Application)
+- VM's advantage is time reduce, lesser cost, proper resources utilization, low maintainance etc
+- VM's disadvantage is less privacy/secure.
+ 
+- Shared machine to host induvidual application -> size is so small -> modren enterprise -> Physical machine/VM's -> shared server
+  (Hardware -> Host OS -> Guest OS -> Application)
+- Shared memory advantage is less cost, less time consuming, no maintainance, perfect resource utilization etc.
+- Shared memory disadvantage is less security.
+
+1. what is Docker?
+-> It is platform for building, shipping and running application in lightweight, portable containers.
+
+2. Why Docker?
+-> Eliminates “it works on my machine” problem
+   Consistent environment for development, testing, and production
+   Lightweight and faster than VMs (virtual machines)
+   Easy scaling and management
+
+3. what is Image?
+-> A lightweight, immutable file that contains the application code, runtime, libraries, and settings needed to run your app. (Like a snapshot) 
+   
+4. what is container?
+-> A running instance of an image. Isolated, but shares the OS kernel. It have both private and shared space, To host the microservices uses containers and k8's
+
+5. what is Dockerfile?     
+-> A text file with instructions to build a Docker image.
+
+6. what is Docker Engine?
+-> The runtime that builds and runs containers.
+
+7. what is Docker Hub?
+-> A cloud registry where you can store and share images. (public/private)
+
+8. what is Volumes?
+-> Persistent storage mechanism that exists outside the container lifecycle.
+
+9. what is Network?
+-> Provides communication between containers or with the outside world.
+
+Docker Architecture
+--------------------
++---------------------------------------------------------+
+|                    Docker Engine                        |
+| +-------------------+   +---------------------------+ |
+| | Docker Daemon       |   | REST API                  | |
+| | (dockerd)           |   | Interface for clients     | |
+| +-------------------+   +---------------------------+ |
+|                |                                        |
+|          +-------------------+                         |
+|          | Docker CLI (client) |  → docker commands     |
+|          +-------------------+                         |
++---------------------------------------------------------+
+
+- Docker Daemon: Runs on the host, manages containers, images, volumes, networks.
+
+- Docker Client (CLI): You interact using commands like docker run, docker build, etc.
+
+- Registry: Stores Docker images (Docker Hub, AWS ECR, GCR, private registries).
+
+| Aspect             | Virtual Machine (VM)                              | Container (Docker)                                        |
+| ------------------ | ------------------------------------------------- | --------------------------------------------------------- |
+| **Architecture**   | Emulates *hardware* (runs a full guest OS + apps) | Shares *host OS kernel* (runs app + dependencies)         |
+| **Size**           | Large (GBs, due to guest OS)                      | Small (MBs, no OS included)                               |
+| **cost**           | High cost                                         | Low cost                                                  |
+| **Boot Time**      | Slow (minutes)                                    | Fast (seconds)                                            |
+| **Resource Usage** | Heavy (CPU, RAM overhead due to guest OS)         | Lightweight (minimal overhead)                            |
+| **Isolation**      | Strong — fully isolated OS                        | Process-level isolation (shares OS kernel)                |
+| **Portability**    | Needs hypervisor support (VMware, Hyper-V)        | Highly portable across systems with Docker engine         |
+| **Performance**    | Slower (due to OS virtualization)                 | Near-native performance                                   |
+| **Persistence**    | Stateful                                          | Typically stateless (but can use volumes for persistence) |
+| **Use Case**       | Run multiple OSes on one physical machine         | Package and ship apps consistently in any environment     |
+| **Diagram**   	 | Hardware->HostOS->Hypervisor->VM 1(Guest OS + App)| Hardware->HostOS->DockerEngine->Container1(App+Libs)      |
+
+Steps to install Docker in RHEL
+--------------------------------
+- sudo dnf -y install dnf-plugins-core
+- sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
+- sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+- systemctl start docker
+- systemctl enable docker
+- systemctl status docker
+- when we Installed docker, by default it creates docker group and who have access to the group they only interact with docker cmds.
+- we need to add ec2-user to the docker group to interact with the doker cmds
+- usermod -aG docker ec2-user
+- logout & login 
+
+Basics of docker
+-----------------
+- Docker -> Image -> container (It's like a nano server)
+- VM's -> AMI(Advanced Metering Infrastructure) -> Instance
+- AMI => (Base OS + App runtime + User creation + Folder creation + Config Files + app code + dependency installation + start/restart app)
+- Image => (Bare min OS(10MB-500MB) + App runtime + + User creation + Folder creation + Config Files + app code + dependency installation
+           + start/restart app)
+- Image size will be 150MB-500MB but AMI size will be 2GB-4GB
+- If Images not found in local registry it will pull from the central registry.  
+- nginx Image -> alpine OS + Install nginx on top of it
+- In system, contains 0-65535 ports same as container also contains 65535 ports.
+- we can assign any ports to the containers and each nginx container is like a manual server.
+- we can't login to the stopped containers only the running containers can able to login.
+- By default nginx container opens port 80, host port 80:80 container port
+
+Docker commands
+---------------
+- docker ps -> displays running containers
+- docker ps -a -> displays running and stopped containers
+- docker images -> displays the images available
+- docker pull <image-name> -> pull images from the docker hub(central registry)
+- docker pull <image-name>:<version> -> pull images according to versions
+- docker create <image>/:<version> -> It will create a Image
+- docker start <container-ID> -> It will start/run the container
+- docker rm -f <container-id> -> It will remove/delete the running container forefully
+- docker stop <container-id> -> It will stop the container
+- docker rmi <ImageID/name> -> It will remove/delete the Images
+- docker rmi <name>:<version> -> It will remove specific versions
+- docker images -a -q -> display all Images ID's
+- docker rmi `docker images -a -q` -> It will remove/delete all Images Instantly
+- docker run <image-name> -> pull image + create container + start container
+- docker run -d <image-name> -> run the image container in detach screen mode/background
+- netstat -lntp -> displays active Internet connections(only servers)
+- docker run -d -p 80:80 nginx -> run the nginx server in the port 80
+- docker exec -it <container-id> bash -> Login to the running container 
+- cd /usr/share/nginx/html/ -> we can interact with cmds and contains index.html file 
+- echo "Hi, Iam from container" > index.html -> nginx web-server loads the .html data 
+- docker logs <container-id> -> It contains logs of the container
+- docker inspect <container-id/Image> -> Inspect all the details of the container or Image

@@ -1,0 +1,30 @@
+Session-14
+-----------
+
+Delete/Archive the old logs in linux server
+--------------------------------------------
+- we schedule few jobs to run and they run in a particular time, If the server/source contains more than 7 days log files then make it 
+  to archive and move to the storage/destination servers by zip. 
+- Steps to create it
+- Source directory & Destination directory mandatory, If forget throw the error with proper Info/usage
+- If path not found for the source & destination throw the error with proper Info/usage
+- Zip the files
+- number of days old logs/set default 7 days 
+- It check the zip package and if not found then install the package.
+- check zip file is success/not, If success delete the log files. If not then throw an error.
+- And also fetch the .zip files from the other servers to the current server and displays.
+- By using crontab we can schedule jobs/script for a required time in linux, Instead of running manually at each time.
+- crontab -e to edit the script according to the time it triggers * * * * * -> min hr day month year
+- all the data of cron jobs will stores in /var/log/cron path.
+- 30 9 * * * sudo sh /home/ec2-user/Expense-Project/04-Deleting-old-logs.sh -> placed in cronjob 
+- by using sudo less cron -> It displays the data in the file-path.
+- And we can also create <sudo sh 04-Deleting-old-logs.sh> this like a cmd like ls, tail, pwd etc.
+- It will help when we usually run in any machines by Installing through the AMI.
+- sudo cp 04-Deleting-old-logs.sh /usr/local/bin/backup.sh
+- sudo mv /usr/local/bin/backup.sh /usr/local/bin/backup
+- sudo chmod +x /usr/local/bin/backup
+- backup -> It is very easy to run whole script in a cmd like this.
+[ ec2-user@ip-172-31-0-5 ~/Expense-Project ]$ backup
+No log files older than 7 days found in /home/ec2-user/Expense-Project/expense-logs.
+No ZIP file to send. Skipping SCP.
+-  
