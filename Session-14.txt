@@ -109,3 +109,6 @@ Restart Postfix to detect the SASL framework.
 
 Sending mail Run the following command to send mail:
 - echo "This is a test mail & Date $(date)" | mutt -s "message" info@gmail.com
+
+3.How do you run other script from current shell-script?
+-  
