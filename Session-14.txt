@@ -40,7 +40,7 @@ crontab
 
 1.Developed a backup script for a linux servers. I installed the script in /usr/local/bin and tested in the server. It worked well. It 
   configured into crontab But next day It got Failed!?
-- echo $PATH  -> Usually all the cmds will storees
+- echo $PATH  -> Usually all the cmds will stores
   /home/ec2-user/.local/bin: -> 
   /home/ec2-user/bin: -> 
   /usr/local/bin: -> It stores customized commands
@@ -78,7 +78,7 @@ Restart Postfix to detect the SASL framework.
 Start Postfix on boot
 - systemctl enable postfix 
 
-Open the /etc/postfix/main.cf file to append the following into the file at the end
+Open the /etc/postfix/main.cf file to append the following into the file at the end of the file
 - vim /etc/postfix/main.cf 
 relayhost = [smtp.gmail.com]:587
 smtp_use_tls = yes
@@ -101,6 +101,7 @@ Create a Postfix lookup table from the sasl_passwd text file by running the foll
 
 Verify Openssl config Add the following line under the section [provider_sect] 
 - vim /etc/ssl/openssl.cnf
+[provider_sect]
 legacy = legacy
 
 Restart Postfix to detect the SASL framework.
