@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MSG="Script01"
-GREET="Hi, from script01
+GREET="Hi, from script01"
 
 echo "Hello from: $MSG"
 
