@@ -161,4 +161,18 @@ inventory.ini
 172.31.82.249
 
 -> ansible-playbook -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-playbook.yaml
+PLAY [PING] ******************************************************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************************************
+ok: [172.31.82.249]
+
+TASK [ping the server] *******************************************************************************************************************************
+ok: [172.31.82.249]
+
+PLAY RECAP *******************************************************************************************************************************************
+172.31.82.249              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
 -> For ad-hoc we use like, ansible -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-playbook.yaml
+-> But we need to pass arguments to command module for ad-hoc
+-> Documentation link for more modules: https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html
+-> 
