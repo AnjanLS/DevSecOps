@@ -90,6 +90,16 @@ Popular Version Control Tools
 -> SVN (Subversion) – A centralized version control system used in enterprises.
 -> Mercurial – Another DVCS, similar to Git but with a different workflow.
 
+Disadvantages of shell-script
+-----------------------------
+-> No Error Handling, we need to check manually.
+-> Not Idempotent
+-> It is homogenous, It only works for particular distribution.
+-> Not scalable to many servers
+-> No password security
+-> Syntax is complex
+-> 
+
 shell scripting
 ---------------
 .sh -> shell script extension

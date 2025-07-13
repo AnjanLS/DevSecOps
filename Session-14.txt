@@ -112,6 +112,7 @@ Sending mail Run the following command to send mail:
 
 3.How do you run other script from current shell-script?
 - Yes, we can run other script from current shell-script by mentioning the other script file in current script sh <filename.sh>, If we 
-  use source ./<filename.sh> the current complete file will be falls on mentioned source filename.sh 
-
-  
+  use source ./<filename.sh> the current complete file will be falls on mentioned source filename.sh and also we can access each other 
+  file variables if we use source ./<filename.sh> 
+  For example: we can use common-code.sh to place resuable code and access this file in a different files to execute by mentioning 
+  source ./common-code.sh it's like a reusable.
