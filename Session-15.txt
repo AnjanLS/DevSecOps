@@ -175,4 +175,18 @@ PLAY RECAP *********************************************************************
 -> For ad-hoc we use like, ansible -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-playbook.yaml
 -> But we need to pass arguments to command module for ad-hoc
 -> Documentation link for more modules: https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html
--> 
+-> Duplicate keys are not allowed in yaml the last will override the previous.
+- name: Install and start nginx
+  hosts: web
+  become: yes #equivalent to -b like root
+  tasks:
+  - name: install nginx
+    ansible.builtin.package:
+      name: nginx
+      state: present
+  - name: start the nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: yes
+      state: stopped
