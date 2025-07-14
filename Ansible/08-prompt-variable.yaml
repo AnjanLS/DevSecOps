@@ -8,10 +8,10 @@
   - name: city
     prompt: "please, enter your city: "
     private: false
-  - name: phone number
+  - name: phone_number
     prompt: "please, enter your phone-number"
   tasks:
   - name: printing the prompts/input-variables
     ansible.builtin.debug:
-      msg: my name is {{username}} and my city is {{city}}, my phone-number is {{phone number}}
+      msg: "my name is {{username}} and my city is {{city}}, my phone-number is {{phone_number}}"
 
