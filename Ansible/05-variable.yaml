@@ -9,4 +9,4 @@
   tasks:
   - name: print the variables
     ansible.builtin.debug:
-      msg: Hi, My name is "{{name}}" and my current address is "{{locality, city, pin}}"
+      msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
