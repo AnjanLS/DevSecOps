@@ -1,14 +1,14 @@
 - name: variables
   hosts: local 
   connection: local
-  vars:
+  vars: #which is globally accessible
     name: Anjan
     locality: gandhinagar
     city: bangalore
     pin: 560071
   tasks:
   - name: print the tasks variables
-    vars:
+    vars: #which is locally accessible
       name: Ajay
       locality: jayanagar
       city: mangalore
@@ -16,6 +16,6 @@
     ansible.builtin.debug:
       msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
 
-  - name: print the global variables
+  - name: print the global variables 
     ansible.builtin.debug:
       msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
