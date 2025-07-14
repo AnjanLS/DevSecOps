@@ -3,4 +3,9 @@ Session-16
 
 -> Ansible playbook is a list of plays, we can write multiple modules/plays in a playbook.
 -> Ansible not only connects to the server, but it also able to connect for it's localhost.
--> 
+
+1. Variables?
+-> Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
+   everywhere. It is DRY.
+
+2.  
