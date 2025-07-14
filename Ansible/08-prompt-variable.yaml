@@ -3,10 +3,10 @@
   connection: local
   vars_prompt:
   - name: username
-    prompt: "please, enter your username: "
+    prompt: "please, enter your username"
     private: false
   - name: city
-    prompt: "please, enter your city: "
+    prompt: "please, enter your city"
     private: false
   - name: phone_number
     prompt: "please, enter your phone-number"
