@@ -13,5 +13,5 @@
   tasks:
   - name: printing the prompts/input-variables
     ansible.builtin.debug:
-      msg: "my name is {{username}} and my city is {{city}}, my phone-number is {{phone number}}"
+      msg: my name is {{username}} and my city is {{city}}, my phone-number is {{phone number}}
 
