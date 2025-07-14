@@ -6,6 +6,20 @@ Session-16
 
 1. Variables?
 -> Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
-   everywhere. It is DRY.
+   everywhere. It is DRY. we can declare by vars and access variable by using {{}}, the variables which are define above the tasks which
+   are globally accessible, but variables declare in the tasks have only accessible inside the tasks. 
+   For example: 
+   - name: variables
+	 hosts: local 
+     connection: local
+     vars:
+       name: Anjan
+       locality: gandhinagar
+       city: bangalore
+       pin: 560071
+     tasks:
+     - name: print the variables
+       ansible.builtin.debug:
+         msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
 
-2.  
+2. 
