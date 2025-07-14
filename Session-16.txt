@@ -1,3 +1,6 @@
 Session-16
 -----------
 
+-> Ansible playbook is a list of plays, we can write multiple modules/plays in a playbook.
+-> Ansible not only connects to the server, but it also able to connect for it's localhost.
+-> 
