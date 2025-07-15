@@ -1,9 +1,11 @@
 - name: Install nginx package on both nodes
   hosts: app
-  connection: app
+  connection: ssh
+  vars:
+    required_package: "nginx"
   tasks:
-  - name: Installing package on nodes
+  - name: Installing only if package is nginx
     package:
-      name: nginx
+      name: "{{required_package}}"
       state: present
-    when: package == nginx
+    when: required_package == "nginx"
