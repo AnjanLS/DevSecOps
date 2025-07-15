@@ -5,12 +5,9 @@ Session-16
 -> Ansible not only connects to the server, but it also able to connect for it's localhost.
 
 1. Variables?
--> * Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
-   everywhere. It is DRY. we can declare by vars and access variable by using {{}}.
-   * The variables which are define above the tasks which are globally accessible, but variables declare in the tasks have only accessible
-   inside the tasks. 
-   * we can declare all the variables in a seperate file and we can access in the program. 
-   * we can use vars_prompt for user-input
+-> Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
+   everywhere. It is DRY. we can declare by vars and access variable by using {{}}. It's also called play level variables.
+
    Example for declaring variable: 
    - name: variables
 	 hosts: local 
@@ -25,9 +22,37 @@ Session-16
        ansible.builtin.debug:
          msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
 	
-	* Play level variables
-	* Task level variables
-	* Variables from files
-	* Variables from prompt
+	* Task level variables - Variables defined above the tasks are globally accessible, while those declared within tasks are limited to
+	that task only.
+	For Example:vars: #which is globally accessible
+				  name: Anjan
+				  locality: gandhinagar
+				  city: bangalore
+				  pin: 560071
+			    tasks:
+			    - name: print the tasks variables
+				  vars: #which is locally accessible
+				    name: Ajay
+				    locality: jayanagar
+				    city: mangalore
+				    pin: 560081
+					
+	* Variables from files - we can declare all the variables in a seperate file and we can access in the program.
+	For Example:vars_files:
+				- variables.yaml
+				
+	* Variables from prompt - we can use vars_prompt for variable user-input & declare the program
+	For Example:vars_prompt:
+				- name: username
+				  prompt: "please, enter your username"
+				  private: false  #It's not confidential
+				  
+	* Variables from inventory - Declare the variables in the inventory.ini & access the variables in files.
+	For Example:[local:vars]
+				name="Anjan"
+				city="bangalore"
+				locality="gandhinagar"
+				pin="560071"
+	
 
 2. 
