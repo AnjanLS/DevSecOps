@@ -61,5 +61,9 @@ Session-16
 				localhost name="sharanya" city="mysore" locality="JPnagara" pin="879003" ansible_user="ec2-user" 
 				ansible_password="DevOps321"
 				
-	* Variables from commandline: we can also declare the variables from commandline by -e, if variables are not in inventory.ini file.
-	For Example:
+	* Variables from commandline: we can also declare the variables from commandline by -e, if variables aren't declared in inventory.ini
+	file and we can also use single quotes while declaring variables if it has a gap.
+	For Example:ansible-playbook -i inventory.ini 11-variable-from-commandline.yaml -e "name=Anjan" -e "city=bangalore" -e 
+				"locality='gandhi nagara'" -e "pin=560071"
+	
+	
