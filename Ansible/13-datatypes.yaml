@@ -2,20 +2,20 @@
   hosts: local
   connection: local
   vars:
-    name: "Anjan"
-    age: 27
-    height: 5.9
-    skills:
+    name: "Anjan" #string
+    age: 27 #numeric
+    height: 5.9 #float  
+    skills: #list
     - linux
     - shell
     - ansible
     - aws
-    active: true
-    address:
+    active: true  #boolean
+    address:  #map/dictionary
       locality: gandhinagar
       city: "bangalore"
       pin: 560076
-    empty_value: null
+    empty_value: null #null/empty
   tasks:
   - name: printing my information
     debug:

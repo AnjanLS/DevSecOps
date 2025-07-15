@@ -116,3 +116,28 @@ Session-16
 	| **List (Array)**          | `[1, 2, 3]`, `['a', 'b', 'c']`         | Ordered collection  |
 	| **Dictionary (Hash/Map)** | `{ name: "Anjan", city: "Bangalore" }` | Key-value pairs     |
 	| **Null**                  | `null` or `~`                          | Represents no value |
+   For Example:
+    - name: printing the datatypes
+	  hosts: local
+	  connection: local
+	  vars:
+		name: "Anjan"
+		age: 27
+		height: 5.9
+		skills:
+		- linux
+		- shell
+		- ansible
+		- aws
+		active: true
+		address:
+		  locality: gandhinagar
+		  city: "bangalore"
+		  pin: 560076
+		empty_value: null
+	  tasks:
+	  - name: printing my information
+		debug:
+		  msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam 
+		  {{active}}"
+		  
