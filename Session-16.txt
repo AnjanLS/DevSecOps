@@ -66,4 +66,39 @@ Session-16
 	For Example:ansible-playbook -i inventory.ini 11-variable-from-commandline.yaml -e "name=Anjan" -e "city=bangalore" -e 
 				"locality='gandhi nagara'" -e "pin=560071"
 	
-	
+	* Variables from preferences: we can declare the variable from host, inventory, commandline, prompt, files & play level, but it will
+	give 1st preferences to commandline.
+	For Example:- name: printing the 1st variable preference
+				  hosts: local
+				  connection: local
+				  vars:
+					Greet: "playlevel"
+				  vars_files:
+				  - variables.yaml
+				  vars_prompt:
+				  - name: Greet
+					prompt: Enter your input
+					private: false
+				  tasks:
+				  - name: printing the task variable
+					vars:
+					  greet: "task"
+					debug:
+					  msg: "Hello from {{greet}}" 
+					  
+	[ ec2-user@ip-172-31-84-147 ~/DevSecOps/Ansible ]$ ansible-playbook -i inventory.ini 12-variable-from-preference.yaml -e "greet=commandline"
+	Enter your input: prompt
+	[WARNING]: Found variable using reserved name: name
+
+	PLAY [printing the 1st variable preference] **********************************************************************************************************
+
+	TASK [Gathering Facts] *******************************************************************************************************************************
+	ok: [localhost]
+
+	TASK [printing the task variable] ********************************************************************************************************************
+	ok: [localhost] => {
+		"msg": "Hello from commandline"
+	}
+
+	PLAY RECAP *******************************************************************************************************************************************
+	localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
