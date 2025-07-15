@@ -2,7 +2,7 @@
   hosts: local
   connection: local
   vars:
-    Greet: "playlevel"
+    greet: "playlevel"
   vars_files:
   - variables.yaml
   vars_prompt:

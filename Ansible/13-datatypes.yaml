@@ -17,5 +17,6 @@
       pin: 560076
     empty_value: null
     tasks:
+    - name: printing the variables
       debug:
         msg: "my name is {{name}}, my skills are {{skills}} and my address is {{address}}"
