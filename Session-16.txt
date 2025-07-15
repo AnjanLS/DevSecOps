@@ -67,7 +67,7 @@ Session-16
 				"locality='gandhi nagara'" -e "pin=560071"
 	
 	* Variables from preferences: we can declare the variable from host, inventory, commandline, prompt, files & play level, but it will
-	give 1st preferences to commandline.
+	give preferences according to the list commandline->task->files->prompt->play->inventory->roles.
 	For Example:- name: printing the 1st variable preference
 				  hosts: local
 				  connection: local
@@ -102,3 +102,17 @@ Session-16
 
 	PLAY RECAP *******************************************************************************************************************************************
 	localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+2. what is datatypes and types?
+-> In Ansible, variables support multiple data types, similar to other languages. Understanding these types is essential for writing 
+   robust playbooks, using conditionals, loops, and templates.
+   For Example:
+    | Data Type                 | Example                                | Description         |
+	| ------------------------- | -------------------------------------- | ------------------- |
+	| **String**                | `"Anjan"` or `'hello'`                 | Text values         |
+	| **Integer**               | `42`                                   | Whole numbers       |
+	| **Float**                 | `3.14`                                 | Decimal numbers     |
+	| **Boolean**               | `true`, `false`                        | Yes/No logic        |
+	| **List (Array)**          | `[1, 2, 3]`, `['a', 'b', 'c']`         | Ordered collection  |
+	| **Dictionary (Hash/Map)** | `{ name: "Anjan", city: "Bangalore" }` | Key-value pairs     |
+	| **Null**                  | `null` or `~`                          | Represents no value |
