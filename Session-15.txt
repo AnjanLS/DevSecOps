@@ -189,4 +189,5 @@ PLAY RECAP *********************************************************************
       state: started
       enabled: yes
       state: stopped
--> Inventory we need mange in server due to hosts and it's credentials maintainence, and not to be kept in github.
+-> Inventory we need mange in server due to hosts and it's credentials maintainence, and not to be kept in github. groups of servers are 
+   present they create seperate user for ansible and access it.

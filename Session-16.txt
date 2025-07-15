@@ -164,3 +164,16 @@ Session-16
 		  msg: "your value {{value}} is less than or equal to 10"
 		when: value | int <= 10
 	
+	Installing packages on different nodes by using condition:
+	- name: Install nginx package on both nodes
+	  hosts: app
+	  become: yes
+	  connection: ssh
+	  vars:
+		required_package: "nginx"
+	  tasks:
+	  - name: Installing only if package is nginx
+		ansible.builtin.package:
+		  name: "{{required_package}}"
+		  state: present
+		when: required_package == "nginx"
