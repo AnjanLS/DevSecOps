@@ -1,0 +1,6 @@
+Session-17
+----------
+
+4. what is looping?
+-> ansible supports looping to run the same tasks multiple times, with different values or on multiple times. loops are powerful when
+   installaing multiple packages, copying files, or processing structured data.

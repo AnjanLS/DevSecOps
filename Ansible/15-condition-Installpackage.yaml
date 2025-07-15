@@ -1,0 +1,9 @@
+- name: Install nginx package on both nodes
+  hosts: app
+  connection: app
+  tasks:
+  - name: Installing package on nodes
+    package:
+      name: nginx
+      state: present
+    when: package == nginx

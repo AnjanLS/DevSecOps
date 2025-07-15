@@ -144,8 +144,23 @@ Session-16
 3. what is conditions?
 -> Ansible uses when statements, which function similarly to if conditions in other programming languages. These when statements allow 
    you to conditionally execute tasks based on specified criteria, such as variable values, facts, or the results of previous tasks. 
+   while using prompt we need to declare it's type | int
    For Example:
+    - name: printing the value if it's greater than 10 or not
+	  hosts: local
+	  connection: local
+	  vars_prompt:
+	  - name: value
+		prompt: "please enter your value"
+		private: false
+	  tasks:
+	  - name: printing the value is greater than 10
+		ansible.builtin.debug:
+		  msg: "your value {{value}} is greater than 10"
+		when: value | int > 10
+
+	  - name: printing the value is <= 10
+		ansible.builtin.debug:
+		  msg: "your value {{value}} is less than or equal to 10"
+		when: value | int <= 10
 	
-4. what is looping?
--> ansible supports looping to run the same tasks multiple times, with different values or on multiple times. loops are powerful when
-   installaing multiple packages, copying files, or processing structured data.

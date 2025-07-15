@@ -1,9 +1,8 @@
 Session-15
 ----------
 
-Configuring server - Plain server to usable server.
-
-configuration management tools - cef, puppet, rundeck, ansible.
+-> Configuring server - Plain server to usable server.
+-> configuration management tools - cef, puppet, rundeck, ansible.
 
 1. what is Ansible?
 -> Ansible is an open-source IT automation tool developed by Red Hat. It is used for:
@@ -43,7 +42,7 @@ push architecture
 -> It doesn't install any software on the managed nodes.
 -> ansible also implemented pull based for few usecases.
 -> Installing the ansible software in the server those called ansible server.
--> ansible server that manages nodes 
+-> ansible server that manages multiple nodes 
 
 Ansible-server
 --------------
@@ -190,3 +189,4 @@ PLAY RECAP *********************************************************************
       state: started
       enabled: yes
       state: stopped
+-> Inventory we need mange in server due to hosts and it's credentials maintainence, and not to be kept in github.
