@@ -5,13 +5,13 @@ Session-16
 -> Ansible not only connects to the server, but it also able to connect for it's localhost.
 
 1. Variables?
--> Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
+-> * Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
    everywhere. It is DRY. we can declare by vars and access variable by using {{}}.
-   The variables which are define above the tasks which are globally accessible, but variables declare in the tasks have only accessible
+   * The variables which are define above the tasks which are globally accessible, but variables declare in the tasks have only accessible
    inside the tasks. 
-   we can declare all the variables in a seperate file and we can access in the program. 
-   we can use vars_prompt for user-input
-   For example: 
+   * we can declare all the variables in a seperate file and we can access in the program. 
+   * we can use vars_prompt for user-input
+   Example for declaring variable: 
    - name: variables
 	 hosts: local 
      connection: local
@@ -24,5 +24,10 @@ Session-16
      - name: print the variables
        ansible.builtin.debug:
          msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
+	
+	* Play level variables
+	* Task level variables
+	* Variables from files
+	* Variables from prompt
 
 2. 

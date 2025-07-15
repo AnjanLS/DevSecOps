@@ -4,10 +4,10 @@
   vars_prompt:
   - name: username
     prompt: "please, enter your username"
-    private: false
+    private: false  #It's not confidential
   - name: city
     prompt: "please, enter your city"
-    private: false
+    private: false  #It's not confidential
   - name: phone_number
     prompt: "please, enter your phone-number"
   tasks:
