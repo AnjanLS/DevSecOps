@@ -6,7 +6,12 @@
     prompt: "please enter your value"
     private: false
   tasks:
-  - name: printing the value
+  - name: printing the value is greater than 10
     ansible.builtin.debug:
-      msg: "your value: {{value}} is greater than 10"
+      msg: "your value {{value}} is greater than 10"
     when: value > 10
+
+  - name: printing the value is <= 10
+    ansible.builtin.debug:
+      msg: "your value {{value}} is less than or equal to 10"
+    when: value <= 10
