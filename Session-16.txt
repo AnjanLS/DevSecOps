@@ -140,4 +140,12 @@ Session-16
 		debug:
 		  msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam 
 		  {{active}}"
-		  
+
+3. what is conditions?
+-> Ansible uses when statements, which function similarly to if conditions in other programming languages. These when statements allow 
+   you to conditionally execute tasks based on specified criteria, such as variable values, facts, or the results of previous tasks. 
+   For Example:
+	
+4. what is looping?
+-> ansible supports looping to run the same tasks multiple times, with different values or on multiple times. loops are powerful when
+   installaing multiple packages, copying files, or processing structured data.

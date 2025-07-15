@@ -1,0 +1,11 @@
+- name: printing the value if it's greater than 10 or not
+  hosts: local
+  connection: local
+  vars_prompt:
+    name: value
+    prompt: "please enter your value"
+  tasks:
+  - name: printing the value
+    ansible.builtin.debug:
+      msg: "your value: {{value}} is greater than 10"
+    when: value > 10
