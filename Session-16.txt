@@ -10,6 +10,7 @@ Session-16
    The variables which are define above the tasks which are globally accessible, but variables declare in the tasks have only accessible
    inside the tasks. 
    we can declare all the variables in a seperate file and we can access in the program. 
+   we can use vars_prompt for user-input
    For example: 
    - name: variables
 	 hosts: local 
