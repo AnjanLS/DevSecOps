@@ -16,7 +16,7 @@
       city: "bangalore"
       pin: 560076
     empty_value: null
-    tasks:
-    - name: printing my information
-      debug:
-        msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam {{active}}"
+  tasks:
+  - name: printing my information
+    debug:
+      msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam {{active}}"
