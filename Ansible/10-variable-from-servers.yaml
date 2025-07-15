@@ -1,0 +1,6 @@
+- name: printing variables from declared hosts
+  hosts: web
+  tasks:
+  - name: printing the variables
+    ansible.builtin.debug:
+      msg: My name is {{name}} and my address is {{locality, city, pin}}
