@@ -1,193 +1,196 @@
-Session-15
-----------
+Session-02
+-----------
 
--> Configuring server - Plain server to usable server.
--> configuration management tools - cef, puppet, rundeck, ansible.
+-> Ansible playbook is a list of plays, we can write multiple modules/plays in a playbook.
+-> Ansible not only connects to the server, but it also able to connect for it's localhost.
 
-1. what is Ansible?
--> Ansible is an open-source IT automation tool developed by Red Hat. It is used for:
-   Configuration management (e.g., installing packages, managing services)
-   Application deployment
-   Task automation (e.g., cron jobs, users)
-   Infrastructure provisioning (e.g., cloud VMs, containers)
-   
--> ssh ec2-user@54.165.221.205 'echo "Hello World" > /tmp/hello.txt'
--> making remote login to the server and executing a cmd and exit.
--> It reduces the manual work, we can run many servers by using remote login within a file containing IP's.
--> ansible uses linux shell cmd but takes remote login to the server and complete the works fastly.
-  
-2. push vs pull architecture?
--> | Type     | Description                                                 | Who initiates?     | Example                                          |
-   | -------- | ----------------------------------------------------------- | ------------------ | ------------------------------------------------ |
-   | **Push** | The central system **sends** changes/commands to the target | Central controller | Ansible pushes configs to servers                |
-   | **Pull** | The target system **fetches** or pulls the config/commands  | Target machine     | Kubernetes nodes pull configs from control plane |
-   Push Example:
-   You use Ansible on your laptop to push a new Nginx install to 10 servers via SSH.
-   CI/CD tools (e.g., Jenkins) push build artifacts to a server after building.
-   Pull Example:
-   A server runs a cron job to pull scripts from GitHub daily.
-   Kubernetes worker nodes pull container images from Docker registry.
+1. Variables?
+-> Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
+   everywhere. It is DRY. we can declare by vars and access variable by using {{}}. It's also called play level variables.
 
-Pull architecture
------------------  
--> Nodes, servers or dots everything are same.
--> all the nodes which are connected to the configured management server.
--> each nodes contain agents, which is responsible for checking the updates with the cm server, usually nodes pull the requests.
--> which increases internet traffic & consume power and server resources.
-
-push architecture
------------------
--> ansible server is connected to all the nodes.
--> ansible uses ssh protocol & no need of agents/agentless.
--> It doesn't install any software on the managed nodes.
--> ansible also implemented pull based for few usecases.
--> Installing the ansible software in the server those called ansible server.
--> ansible server that manages multiple nodes 
-
-Ansible-server
---------------
--> sudo dnf install ansible -y
--> uses ssh to connect target machines and uses default port number 22.
--> ansible --version
--> ansible all -i <IP-address>, -e ansible_user=ec2-user -e ansible_password=DevOps321 -m ping 
-13.218.66.45 | SUCCESS => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
-    },
-    "changed": false,
-    "ping": "pong"
-}
--> get the response from the mentioned IP-address, 
--> -i means inventory - list of IP-address ansible connect to
--> -m means module
--> In linux calls command, but in ansible calls module
--> commandname <options> <Inputs>, module args inputs
--> For Example,
-dnf install nginx -y, ansible all -i <IP-address>, -e ansible_user=ec2-user -e ansible_password=DevOps321 -b -m dnf -a "name=nginx state=installed"
-
-13.218.66.45 | CHANGED => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
-    },
-    "changed": true,
-    "msg": "",
-    "rc": 0,
-    "results": [
-        "Installed: nginx-filesystem-2:1.20.1-22.el9_6.3.noarch",
-        "Installed: redhat-logos-httpd-90.5-1.el9_6.1.noarch",
-        "Installed: nginx-2:1.20.1-22.el9_6.3.x86_64",
-        "Installed: nginx-core-2:1.20.1-22.el9_6.3.x86_64"
-    ]
-}
-
--> In linux for root access we use sudo, but in ansible we use -b it means become root
--> systemctl start ninx == ...... service -a "name=nginx state=started"
-13.218.66.45 | CHANGED => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
-    },
-    "changed": true,
-    "name": "nginx",
-    "state": "started",......
--> If we run the command once again when it comes yellow means state has changed, if it's green there's nothing has changed
--> after starting nginx server, we can run and check the IP-address in google.
--> For running a project need to keep the commands in a file for shellscript
--> For running a project need to keep the modules in a file for playbook
--> For writing a playbook we should understand YAML(Yet Another Markup Language)
--> Different markup language uses syntax to transfer the data
--> user.xml
-<Student>
-	<name>Anjan</name>
-	<email>anjan@gmail.com</email>
-	<address>
-		<permanent-address>
-			<doorno>123</doorno>
-			<street>gandhinagar</street>
-		</permanent-address>
-		<current-address>
-			<doorno>123</doorno>
-			<street>gandhinagar</street>
-		</current-address>
-	</address>
-</Student>
-
--> user.json
-{
-	"name": "Anjan",
-	"email": "anjan@gmail.com",
-	"address": 
-	[
-		{
-			"type": "Permanent-address",
-			"doorno": 123,
-			"street": "gandhinagar"
-		},
-		{
-			"type": "Current-address",
-			"doorno": 123,
-			"street": "gandhinagar"
-		}
-	]
-}
-
--> user.yaml
-- name: Anjan
-  email: anjan@gmail.com
-  address:
-  - type: "Permanent address"
-	doorno: 123
-	street: gandhinagar
-	city: bangalore
-  - type: "Current address"
-	doorno: 123
-	street: gandhinagar
-	cit: bangalore
+   Example for declaring variable: 
+   - name: variables
+	 hosts: local 
+     connection: local
+     vars:
+       name: Anjan
+       locality: gandhinagar
+       city: bangalore
+       pin: 560071
+     tasks:
+     - name: print the variables
+       ansible.builtin.debug:
+         msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
 	
--> Ad-hoc commands in Ansible are one-line commands you run directly from the terminal to perform quick tasks on remote systems - 
-   without writing a full playbook
--> For example, ansible all -m ping
--> Basic program to ping server
-01-playbook.yaml
-----------------
-- name: PING
-  hosts: web
-  tasks:
-  - name: ping the server
-    ansible.builtin.ping:
-inventory.ini
--------------
-[web]
-172.31.82.249
+	* Task level variables - Variables defined above the tasks are globally accessible, while those declared within tasks are limited to
+	that task only.
+	For Example:vars: #which is globally accessible
+				  name: Anjan
+				  locality: gandhinagar
+				  city: bangalore
+				  pin: 560071
+			    tasks:
+			    - name: print the tasks variables
+				  vars: #which is locally accessible
+				    name: Ajay
+				    locality: jayanagar
+				    city: mangalore
+				    pin: 560081
+					
+	* Variables from files - we can declare all the variables in a seperate file and we can access in the program.
+	For Example:vars_files:
+				- variables.yaml
+				
+	* Variables from prompt - we can use vars_prompt for variable user-input & declare the program
+	For Example:vars_prompt:
+				- name: username
+				  prompt: "please, enter your username"
+				  private: false  #It's not confidential
+				  
+	* Variables from inventory - Declare the variables in the inventory.ini & access the variables in files.
+	For Example:[local:vars]
+				name="Anjan"
+				city="bangalore"
+				locality="gandhinagar"
+				pin="560071"
+				
+	* Variables from Hosts: Declaring variables for required hosts in inventory & it's only accessible for that hosts.
+	For Example:[web]
+				172.31.82.249 name="amar" city="mangalore" locality="jayanagara" pin="700901" ansible_user="ec2-user" 
+				ansible_password="DevOps321"
+				localhost name="sharanya" city="mysore" locality="JPnagara" pin="879003" ansible_user="ec2-user" 
+				ansible_password="DevOps321"
+				
+	* Variables from commandline: we can also declare the variables from commandline by -e, if variables aren't declared in inventory.ini
+	file and we can also use single quotes while declaring variables if it has a gap.
+	For Example:ansible-playbook -i inventory.ini 11-variable-from-commandline.yaml -e "name=Anjan" -e "city=bangalore" -e 
+				"locality='gandhi nagara'" -e "pin=560071"
+	
+	* Variables from preferences: we can declare the variable from host, inventory, commandline, prompt, files & play level, but it will
+	give preferences according to the list commandline->task->files->prompt->play->inventory->roles.
+	For Example:- name: printing the 1st variable preference
+				  hosts: local
+				  connection: local
+				  vars:
+					Greet: "playlevel"
+				  vars_files:
+				  - variables.yaml
+				  vars_prompt:
+				  - name: Greet
+					prompt: Enter your input
+					private: false
+				  tasks:
+				  - name: printing the task variable
+					vars:
+					  greet: "task"
+					debug:
+					  msg: "Hello from {{greet}}" 
+					  
+	[ ec2-user@ip-172-31-84-147 ~/DevSecOps/Ansible ]$ ansible-playbook -i inventory.ini 12-variable-from-preference.yaml -e "greet=commandline"
+	Enter your input: prompt
+	[WARNING]: Found variable using reserved name: name
 
--> ansible-playbook -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-playbook.yaml
-PLAY [PING] ******************************************************************************************************************************************
+	PLAY [printing the 1st variable preference] **********************************************************************************************************
 
-TASK [Gathering Facts] *******************************************************************************************************************************
-ok: [172.31.82.249]
+	TASK [Gathering Facts] *******************************************************************************************************************************
+	ok: [localhost]
 
-TASK [ping the server] *******************************************************************************************************************************
-ok: [172.31.82.249]
+	TASK [printing the task variable] ********************************************************************************************************************
+	ok: [localhost] => {
+		"msg": "Hello from commandline"
+	}
 
-PLAY RECAP *******************************************************************************************************************************************
-172.31.82.249              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+	PLAY RECAP *******************************************************************************************************************************************
+	localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 
--> For ad-hoc we use like, ansible -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-playbook.yaml
--> But we need to pass arguments to command module for ad-hoc
--> Documentation link for more modules: https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html
--> Duplicate keys are not allowed in yaml the last will override the previous.
-- name: Install and start nginx
-  hosts: web
-  become: yes #equivalent to -b like root
-  tasks:
-  - name: install nginx
-    ansible.builtin.package:
-      name: nginx
-      state: present
-  - name: start the nginx
-    ansible.builtin.service:
-      name: nginx
-      state: started
-      enabled: yes
-      state: stopped
--> Inventory we need mange in server due to hosts and it's credentials maintainence, and not to be kept in github. groups of servers are 
-   present they create seperate user for ansible and access it.
+2. what is datatypes and types?
+-> In Ansible, variables support multiple data types, similar to other languages. Understanding these types is essential for writing 
+   robust playbooks, using conditionals, loops, and templates.
+   For Example:
+    | Data Type                 | Example                                | Description         |
+	| ------------------------- | -------------------------------------- | ------------------- |
+	| **String**                | `"Anjan"` or `'hello'`                 | Text values         |
+	| **Integer**               | `42`                                   | Whole numbers       |
+	| **Float**                 | `3.14`                                 | Decimal numbers     |
+	| **Boolean**               | `true`, `false`                        | Yes/No logic        |
+	| **List (Array)**          | `[1, 2, 3]`, `['a', 'b', 'c']`         | Ordered collection  |
+	| **Dictionary (Hash/Map)** | `{ name: "Anjan", city: "Bangalore" }` | Key-value pairs     |
+	| **Null**                  | `null` or `~`                          | Represents no value |
+   For Example:
+    - name: printing the datatypes
+	  hosts: local
+	  connection: local
+	  vars:
+		name: "Anjan"
+		age: 27
+		height: 5.9
+		skills:
+		- linux
+		- shell
+		- ansible
+		- aws
+		active: true
+		address:
+		  locality: gandhinagar
+		  city: "bangalore"
+		  pin: 560076
+		empty_value: null
+	  tasks:
+	  - name: printing my information
+		debug:
+		  msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam 
+		  {{active}}"
+
+3. what is conditions?
+-> Ansible uses when statements, which function similarly to if conditions in other programming languages. These when statements allow 
+   you to conditionally execute tasks based on specified criteria, such as variable values, facts, or the results of previous tasks. 
+   while using prompt we need to declare it's type | int
+   For Example:
+    - name: printing the value if it's greater than 10 or not
+	  hosts: local
+	  connection: local
+	  vars_prompt:
+	  - name: value
+		prompt: "please enter your value"
+		private: false
+	  tasks:
+	  - name: printing the value is greater than 10
+		ansible.builtin.debug:
+		  msg: "your value {{value}} is greater than 10"
+		when: value | int > 10
+
+	  - name: printing the value is <= 10
+		ansible.builtin.debug:
+		  msg: "your value {{value}} is less than or equal to 10"
+		when: value | int <= 10
+	
+	Installing packages on different nodes by using condition:
+	- name: Install nginx package on both nodes
+	  hosts: app
+	  become: yes
+	  connection: ssh
+	  vars:
+		required_package: "nginx"
+	  tasks:
+	  - name: Installing only if package is nginx
+		ansible.builtin.package:
+		  name: "{{required_package}}"
+		  state: present
+		when: required_package == "nginx"
+		
+	Installing packages according to flavours
+	- name: Installing nginx package on node machine
+	  hosts: web
+	  become: true  #like sudo
+	  tasks:
+	  - name: Install nginx if RHEL
+		ansible.builtin.dnf:
+		  name: nginx
+		  state: present
+		when: ansible_os_family == "RedHat"
+
+	  - name: Install nginx if Ubuntu
+		ansible.builtin.apt:
+		  name: nginx
+		  state: present
+		when: ansible_os_family == "Debian"

@@ -1,196 +1,155 @@
-Session-16
------------
+Session-03
+----------
+-> facts == variables
+-> Ansible server which is connected to node and fetch all the node data.
+-> ansible.builtin.package means it runs installation cmd's in the background according to the linux flavours.
+   example: RHEL9->dnf, ubuntu->apt-get
+-> Ansible facts are pieces of information (key-value pairs) automatically gathered from remote hosts during playbook execution using 
+   the setup module. Includes OS type and version, Hostname, IP-addresses, Disk space, Memory info, CPU architecture, Network interfaces,
+   Custom user-defined facts.
+   Example: - name: Printing the facts
+			  hosts: web
+			  tasks:
+			  - name: Printing the facts
+				ansible.builtin.debug:
+				  msg: "{{ ansible_facts }}" 
+			
+			  - name: Printing the host info
+				ansible.builtin.debug:
+				  var: ansible_facts['default_ipv4']['address']
+   
+4. what is loops?
+-> ansible supports looping to run the same tasks multiple times, with different values or on multiple times. loops are powerful when
+   installaing multiple packages, copying files, or processing structured data. we can access by using reserved keyword item.
+   Example: - name: loops
+			  hosts: local
+			  connection: local
+			  tasks:
+			  - name: printing in loops
+				ansible.builtin.debug:
+				  msg: "hello {{ item }}"
+				loop:
+				- anjan
+				- aruna 
+				- abhi
+   
+   Installing and removing packages using loops:
+    - name: Install packages
+	  hosts: web
+	  become: true
+	  tasks:
+	  - name: Install packages
+		ansible.builtin.package:
+		  name: "{{ item }}"
+		  state: present
+		loop:
+		- git
+		- python3
+		- mysql
+		- gcc
+		- zip
 
--> Ansible playbook is a list of plays, we can write multiple modules/plays in a playbook.
--> Ansible not only connects to the server, but it also able to connect for it's localhost.
+	  - name: Remove packages
+		ansible.builtin.package:
+		  name: "{{ item.name }}"
+		  state: "{{ item.state}}"
+		loop:
+		- { name: 'gcc', state: 'absent' }
+		- { name: 'zip', state: 'absent' }
+		
+5. what is functions?
+-> functions are reusable block of code that performs a specific task are also known as filters. we don't have access to create functions,
+   we can use default filters available in ansible.
+   filters = data manipulations
+   Example: - name: defining function
+			  hosts: local
+			  connection: local
+			  # vars:
+			  #   person: Abhi
+			  tasks: 
+			  - name: defining undefined variable
+				debug:
+				  msg: "Hello {{ person | default('Anjan') }}"
 
-1. Variables?
--> Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
-   everywhere. It is DRY. we can declare by vars and access variable by using {{}}. It's also called play level variables.
-
-   Example for declaring variable: 
-   - name: variables
-	 hosts: local 
-     connection: local
-     vars:
-       name: Anjan
-       locality: gandhinagar
-       city: bangalore
-       pin: 560071
-     tasks:
-     - name: print the variables
-       ansible.builtin.debug:
-         msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
-	
-	* Task level variables - Variables defined above the tasks are globally accessible, while those declared within tasks are limited to
-	that task only.
-	For Example:vars: #which is globally accessible
-				  name: Anjan
-				  locality: gandhinagar
-				  city: bangalore
-				  pin: 560071
-			    tasks:
-			    - name: print the tasks variables
-				  vars: #which is locally accessible
-				    name: Ajay
-				    locality: jayanagar
-				    city: mangalore
-				    pin: 560081
-					
-	* Variables from files - we can declare all the variables in a seperate file and we can access in the program.
-	For Example:vars_files:
-				- variables.yaml
-				
-	* Variables from prompt - we can use vars_prompt for variable user-input & declare the program
-	For Example:vars_prompt:
-				- name: username
-				  prompt: "please, enter your username"
-				  private: false  #It's not confidential
+			  - name: converting string into list
+				vars: 
+				  fruits: "apple, banana, cherry"
+				debug: 
+				  msg: "Fruits are {{ fruits | split(',') }}"
 				  
-	* Variables from inventory - Declare the variables in the inventory.ini & access the variables in files.
-	For Example:[local:vars]
-				name="Anjan"
-				city="bangalore"
-				locality="gandhinagar"
-				pin="560071"
-				
-	* Variables from Hosts: Declaring variables for required hosts in inventory & it's only accessible for that hosts.
-	For Example:[web]
-				172.31.82.249 name="amar" city="mangalore" locality="jayanagara" pin="700901" ansible_user="ec2-user" 
-				ansible_password="DevOps321"
-				localhost name="sharanya" city="mysore" locality="JPnagara" pin="879003" ansible_user="ec2-user" 
-				ansible_password="DevOps321"
-				
-	* Variables from commandline: we can also declare the variables from commandline by -e, if variables aren't declared in inventory.ini
-	file and we can also use single quotes while declaring variables if it has a gap.
-	For Example:ansible-playbook -i inventory.ini 11-variable-from-commandline.yaml -e "name=Anjan" -e "city=bangalore" -e 
-				"locality='gandhi nagara'" -e "pin=560071"
-	
-	* Variables from preferences: we can declare the variable from host, inventory, commandline, prompt, files & play level, but it will
-	give preferences according to the list commandline->task->files->prompt->play->inventory->roles.
-	For Example:- name: printing the 1st variable preference
+			  - name: converting map into list
+				vars:
+				  details: 
+					name: "Anjan"
+					locality: "bangalore"
+				debug:
+					msg: "My Info: {{ details | dict2items }}"
+					
+			  - name: converting list into map
+				vars:
+				  fruits:
+					- fruit: apple
+					  color: red
+					- fruit: banana
+					  color: yellow
+					- fruit: cherry
+					  color: red
+					- fruit: dragonfruit
+					  color: pink
+				debug:
+				  msg: "fruits are: {{ fruits | items2dict (key_name='fruit', value_name='color') }}"
+
+			  - name: convert uppercase to lowercase
+				vars:
+				  name: "ANJAN L S"
+				debug:
+				  msg: "name in lowercase: {{ name | lower }}, name in uppercase: {{ name | upper }}"
+				  
+			  - name: print min and max number
+				vars:
+				  numbers: [21,63,92,54,78,33,04,10,98]
+				debug: 
+				  msg: "min number is: {{numbers | min}}, max number is: {{numbers | max}}"
+				  
+-> For this we need package netaddr for that we need to know the python version by ansible --version, and then pip3.9 install netaddr
+   If ip is not valid it shows false, it it's true it shows IP-address.
+			  - name: checking IP is valid or not
+				vars: 
+				  ip: "2673.081.638.538"
+				debug:
+				  msg: "{{ip | ansible.utils.ipaddr}}"
+				  
+-> For Installing zip package, pip3.9 install <zip> 
+
+6. what if module is not available?
+-> If module is not available in ansible, we can use shell(ansible.builtin.shell) and command(ansible.builtin.command) modules.
+   shell -> It's like logging into the shell/server and executing the command and we can access variables, redirections, pipes.
+   command -> It's like executing command from outside and not get access to variables, redirection, pipes etc. ssh ec2-user@IP command 
+   command is more secure, it will access outside from the server and shell is for complex commands it is less secure and have access to
+   env.
+   For Example: - name: command vs shell
 				  hosts: local
 				  connection: local
-				  vars:
-					Greet: "playlevel"
-				  vars_files:
-				  - variables.yaml
-				  vars_prompt:
-				  - name: Greet
-					prompt: Enter your input
-					private: false
 				  tasks:
-				  - name: printing the task variable
-					vars:
-					  greet: "task"
-					debug:
-					  msg: "Hello from {{greet}}" 
-					  
-	[ ec2-user@ip-172-31-84-147 ~/DevSecOps/Ansible ]$ ansible-playbook -i inventory.ini 12-variable-from-preference.yaml -e "greet=commandline"
-	Enter your input: prompt
-	[WARNING]: Found variable using reserved name: name
+				  - name: execute ls command in command module
+				    ansible.builtin.command: ls -ltr > /tmp/hello.txt	#error
+					
+				  - name: execute ls command in shell module
+					ansible.builtin.shell: ls -ltr > /tmp/hello.txt		#ok
 
-	PLAY [printing the 1st variable preference] **********************************************************************************************************
-
-	TASK [Gathering Facts] *******************************************************************************************************************************
-	ok: [localhost]
-
-	TASK [printing the task variable] ********************************************************************************************************************
-	ok: [localhost] => {
-		"msg": "Hello from commandline"
-	}
-
-	PLAY RECAP *******************************************************************************************************************************************
-	localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
-
-2. what is datatypes and types?
--> In Ansible, variables support multiple data types, similar to other languages. Understanding these types is essential for writing 
-   robust playbooks, using conditionals, loops, and templates.
-   For Example:
-    | Data Type                 | Example                                | Description         |
-	| ------------------------- | -------------------------------------- | ------------------- |
-	| **String**                | `"Anjan"` or `'hello'`                 | Text values         |
-	| **Integer**               | `42`                                   | Whole numbers       |
-	| **Float**                 | `3.14`                                 | Decimal numbers     |
-	| **Boolean**               | `true`, `false`                        | Yes/No logic        |
-	| **List (Array)**          | `[1, 2, 3]`, `['a', 'b', 'c']`         | Ordered collection  |
-	| **Dictionary (Hash/Map)** | `{ name: "Anjan", city: "Bangalore" }` | Key-value pairs     |
-	| **Null**                  | `null` or `~`                          | Represents no value |
-   For Example:
-    - name: printing the datatypes
+-> we can store the ouput in a variable and we can print it by using function.
+	- name: store output in shell variable
 	  hosts: local
 	  connection: local
-	  vars:
-		name: "Anjan"
-		age: 27
-		height: 5.9
-		skills:
-		- linux
-		- shell
-		- ansible
-		- aws
-		active: true
-		address:
-		  locality: gandhinagar
-		  city: "bangalore"
-		  pin: 560076
-		empty_value: null
 	  tasks:
-	  - name: printing my information
+	  - name: storing in shell 
+		shell: ls -ltr
+		register: shell_result
+
+	  - name: print variable
 		debug:
-		  msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam 
-		  {{active}}"
+		  msg: "{{ shell_result }}"
 
-3. what is conditions?
--> Ansible uses when statements, which function similarly to if conditions in other programming languages. These when statements allow 
-   you to conditionally execute tasks based on specified criteria, such as variable values, facts, or the results of previous tasks. 
-   while using prompt we need to declare it's type | int
-   For Example:
-    - name: printing the value if it's greater than 10 or not
-	  hosts: local
-	  connection: local
-	  vars_prompt:
-	  - name: value
-		prompt: "please enter your value"
-		private: false
-	  tasks:
-	  - name: printing the value is greater than 10
-		ansible.builtin.debug:
-		  msg: "your value {{value}} is greater than 10"
-		when: value | int > 10
-
-	  - name: printing the value is <= 10
-		ansible.builtin.debug:
-		  msg: "your value {{value}} is less than or equal to 10"
-		when: value | int <= 10
-	
-	Installing packages on different nodes by using condition:
-	- name: Install nginx package on both nodes
-	  hosts: app
-	  become: yes
-	  connection: ssh
-	  vars:
-		required_package: "nginx"
-	  tasks:
-	  - name: Installing only if package is nginx
-		ansible.builtin.package:
-		  name: "{{required_package}}"
-		  state: present
-		when: required_package == "nginx"
-		
-	Installing packages according to flavours
-	- name: Installing nginx package on node machine
-	  hosts: web
-	  become: true  #like sudo
-	  tasks:
-	  - name: Install nginx if RHEL
-		ansible.builtin.dnf:
-		  name: nginx
-		  state: present
-		when: ansible_os_family == "RedHat"
-
-	  - name: Install nginx if Ubuntu
-		ansible.builtin.apt:
-		  name: nginx
-		  state: present
-		when: ansible_os_family == "Debian"
+-> ansible is idempotent, running a playbook (or a specific task within it) multiple times will have the same effect as running it once,
+   provided no external changes are made between runs.
+   
