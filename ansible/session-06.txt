@@ -39,6 +39,7 @@ Default region name [None]: us-east-1
 Default output format [None]: (just press Enter)
 
 -> then we can Interact with aws using ansible.
+
 create-ec2-r53.yaml
 --------------------
 - name: create EC2 and Route53 records
