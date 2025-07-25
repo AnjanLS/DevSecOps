@@ -14,13 +14,13 @@ Configuration management & deployment using ansible
 -> open libraries are different programming languages, by using ansible through API's we can access aws.
 -> ansible is made by using python libraries
 
-							console-----
+							console----
 									   |
 									   |
 							CLI--------------> AWS
 									   |
 									   |
-		Ansible ----------> API---------
+		Ansible ----------> API--------
 				pyhtonlibs
 				boto3
 				botocore
