@@ -1,0 +1,17 @@
+- name: Print the prompt/user-input variables
+  hosts: local
+  connection: local
+  vars_prompt:
+  - name: username
+    prompt: "please, enter your username"
+    private: false  #It's not confidential
+  - name: city
+    prompt: "please, enter your city"
+    private: false  #It's not confidential
+  - name: phone_number
+    prompt: "please, enter your phone-number"
+  tasks:
+  - name: printing the prompts/input-variables
+    ansible.builtin.debug:
+      msg: "my name is {{username}} and my city is {{city}}, my phone-number is {{phone_number}}"
+

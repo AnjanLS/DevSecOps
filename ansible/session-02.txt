@@ -1,0 +1,193 @@
+Session-15
+----------
+
+-> Configuring server - Plain server to usable server.
+-> configuration management tools - cef, puppet, rundeck, ansible.
+
+1. what is Ansible?
+-> Ansible is an open-source IT automation tool developed by Red Hat. It is used for:
+   Configuration management (e.g., installing packages, managing services)
+   Application deployment
+   Task automation (e.g., cron jobs, users)
+   Infrastructure provisioning (e.g., cloud VMs, containers)
+   
+-> ssh ec2-user@54.165.221.205 'echo "Hello World" > /tmp/hello.txt'
+-> making remote login to the server and executing a cmd and exit.
+-> It reduces the manual work, we can run many servers by using remote login within a file containing IP's.
+-> ansible uses linux shell cmd but takes remote login to the server and complete the works fastly.
+  
+2. push vs pull architecture?
+-> | Type     | Description                                                 | Who initiates?     | Example                                          |
+   | -------- | ----------------------------------------------------------- | ------------------ | ------------------------------------------------ |
+   | **Push** | The central system **sends** changes/commands to the target | Central controller | Ansible pushes configs to servers                |
+   | **Pull** | The target system **fetches** or pulls the config/commands  | Target machine     | Kubernetes nodes pull configs from control plane |
+   Push Example:
+   You use Ansible on your laptop to push a new Nginx install to 10 servers via SSH.
+   CI/CD tools (e.g., Jenkins) push build artifacts to a server after building.
+   Pull Example:
+   A server runs a cron job to pull scripts from GitHub daily.
+   Kubernetes worker nodes pull container images from Docker registry.
+
+Pull architecture
+-----------------  
+-> Nodes, servers or dots everything are same.
+-> all the nodes which are connected to the configured management server.
+-> each nodes contain agents, which is responsible for checking the updates with the cm server, usually nodes pull the requests.
+-> which increases internet traffic & consume power and server resources.
+
+push architecture
+-----------------
+-> ansible server is connected to all the nodes.
+-> ansible uses ssh protocol & no need of agents/agentless.
+-> It doesn't install any software on the managed nodes.
+-> ansible also implemented pull based for few usecases.
+-> Installing the ansible software in the server those called ansible server.
+-> ansible server that manages multiple nodes 
+
+Ansible-server
+--------------
+-> sudo dnf install ansible -y
+-> uses ssh to connect target machines and uses default port number 22.
+-> ansible --version
+-> ansible all -i <IP-address>, -e ansible_user=ec2-user -e ansible_password=DevOps321 -m ping 
+13.218.66.45 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+-> get the response from the mentioned IP-address, 
+-> -i means inventory - list of IP-address ansible connect to
+-> -m means module
+-> In linux calls command, but in ansible calls module
+-> commandname <options> <Inputs>, module args inputs
+-> For Example,
+dnf install nginx -y, ansible all -i <IP-address>, -e ansible_user=ec2-user -e ansible_password=DevOps321 -b -m dnf -a "name=nginx state=installed"
+
+13.218.66.45 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": true,
+    "msg": "",
+    "rc": 0,
+    "results": [
+        "Installed: nginx-filesystem-2:1.20.1-22.el9_6.3.noarch",
+        "Installed: redhat-logos-httpd-90.5-1.el9_6.1.noarch",
+        "Installed: nginx-2:1.20.1-22.el9_6.3.x86_64",
+        "Installed: nginx-core-2:1.20.1-22.el9_6.3.x86_64"
+    ]
+}
+
+-> In linux for root access we use sudo, but in ansible we use -b it means become root
+-> systemctl start ninx == ...... service -a "name=nginx state=started"
+13.218.66.45 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": true,
+    "name": "nginx",
+    "state": "started",......
+-> If we run the command once again when it comes yellow means state has changed, if it's green there's nothing has changed
+-> after starting nginx server, we can run and check the IP-address in google.
+-> For running a project need to keep the commands in a file for shellscript
+-> For running a project need to keep the modules in a file for playbook
+-> For writing a playbook we should understand YAML(Yet Another Markup Language)
+-> Different markup language uses syntax to transfer the data
+-> user.xml
+<Student>
+	<name>Anjan</name>
+	<email>anjan@gmail.com</email>
+	<address>
+		<permanent-address>
+			<doorno>123</doorno>
+			<street>gandhinagar</street>
+		</permanent-address>
+		<current-address>
+			<doorno>123</doorno>
+			<street>gandhinagar</street>
+		</current-address>
+	</address>
+</Student>
+
+-> user.json
+{
+	"name": "Anjan",
+	"email": "anjan@gmail.com",
+	"address": 
+	[
+		{
+			"type": "Permanent-address",
+			"doorno": 123,
+			"street": "gandhinagar"
+		},
+		{
+			"type": "Current-address",
+			"doorno": 123,
+			"street": "gandhinagar"
+		}
+	]
+}
+
+-> user.yaml
+- name: Anjan
+  email: anjan@gmail.com
+  address:
+  - type: "Permanent address"
+	doorno: 123
+	street: gandhinagar
+	city: bangalore
+  - type: "Current address"
+	doorno: 123
+	street: gandhinagar
+	cit: bangalore
+	
+-> Ad-hoc commands in Ansible are one-line commands you run directly from the terminal to perform quick tasks on remote systems - 
+   without writing a full playbook
+-> For example, ansible all -m ping
+-> Basic program to ping server
+01-playbook.yaml
+----------------
+- name: PING
+  hosts: web
+  tasks:
+  - name: ping the server
+    ansible.builtin.ping:
+inventory.ini
+-------------
+[web]
+172.31.82.249
+
+-> ansible-playbook -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-playbook.yaml
+PLAY [PING] ******************************************************************************************************************************************
+
+TASK [Gathering Facts] *******************************************************************************************************************************
+ok: [172.31.82.249]
+
+TASK [ping the server] *******************************************************************************************************************************
+ok: [172.31.82.249]
+
+PLAY RECAP *******************************************************************************************************************************************
+172.31.82.249              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+-> For ad-hoc we use like, ansible -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 01-playbook.yaml
+-> But we need to pass arguments to command module for ad-hoc
+-> Documentation link for more modules: https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html
+-> Duplicate keys are not allowed in yaml the last will override the previous.
+- name: Install and start nginx
+  hosts: web
+  become: yes #equivalent to -b like root
+  tasks:
+  - name: install nginx
+    ansible.builtin.package:
+      name: nginx
+      state: present
+  - name: start the nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: yes
+      state: stopped
+-> Inventory we need mange in server due to hosts and it's credentials maintainence, and not to be kept in github. groups of servers are 
+   present they create seperate user for ansible and access it.

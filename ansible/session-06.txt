@@ -1,0 +1,167 @@
+Session-19
+-----------
+
+1. what is ansible roles?
+-> An Ansible role is a structured, reusable, and modular way to organize Ansible code. It allows you to group tasks, handlers, variables,
+   templates, and files in a standard directory layout — making your automation cleaner, more readable, and easier to manage.
+   or
+   ansible is a standard structure of writing playbooks that contains tasks, variables, dependencies, files, templates, libraries etc.
+   
+2. Why Use Roles?
+-> Without roles:
+   You put everything in a big playbook → harder to manage.
+   With roles:
+   You break tasks into reusable components.
+   You can share roles easily across projects or teams.
+   Code becomes clean, scalable, and maintainable.
+   
+3. Structure of a Role?
+-> When you create a role (ansible-galaxy init <role-name>), it generates:
+roles/
+└── myrole/
+    ├── defaults/
+    │   └── main.yml         # Default variables
+    ├── files/
+    │   └── ...              # Static files (e.g., configs)
+    ├── handlers/
+    │   └── main.yml         # Handlers (used with `notify`)
+    ├── meta/
+    │   └── main.yml         # Role dependencies and metadata
+    ├── tasks/
+    │   └── main.yml         # Main list of tasks to run
+    ├── templates/
+    │   └── ...              # Jinja2 templates
+    ├── tests/
+    │   └── inventory
+    │   └── test.yml
+    └── vars/
+        └── main.yml         # Other variables (higher priority than defaults)
+
+-role/role-name
+	-tasks - we can keep our all tasks here, ansible automatically loads them
+		-main.yaml - will place the actual code here
+	-vars - variables required for the role
+		-main.yaml - will place variables here 
+	-templates - we can keep variables in the jinja2 configuration files, ansible replace the value at runtime. (standard format)
+		-<filename>.service.j2 - It contains variables & we can change it in runtime for that need to use ansible.builtin.template module.
+	-files - we can place the services files in here
+		-<filename>.service - It will execute .service file at runtime & it's first preference fetch location path.
+	-handlers - notifiers when some change event is happened in task ansible can trigger other tasks using handlers.
+		-main.yaml - contains code to restart.
+	-defaults/ - stores all the defaults 
+		-main.yaml - we can store default/lower priority variables here
+	-meta - includes role dependencies & optional galaxy metadata  such as platform supported
+		-main.yaml- includes dependencies & its info
+	-library - roles can also includes custom modules/libraries
+		
+-role	
+	-common - It includes where the common code accross different roles like(frontend, backend, database)
+		-tasks - contains common existing code b/n roles like remove/create directory, download-code & unarchive(download & unzip) file
+		-vars - contains variables
+
+-> It'll check where the backend.service will be located, if files is there it'll check directly from there or else need to declare 
+   template module & modify the src file name framed in templates <filename>.j2
+An exception occurred during task execution. To see the full traceback, use -vvv. The error was: If you are using a module and expect 
+the file to exist on the remote, see the remote_src option fatal: [backend.anjansriram.shop]: FAILED! => 
+{"changed": false, "msg": "Could not find or access 'backend.service'\nSearched in:
+\n\t/home/ec2-user/DevSecOps/ansible/ansible-expense-project-usingRoles/roles/backend/files/backend.service\n
+\t/home/ec2-user/DevSecOps/ansible/ansible-expense-project-usingRoles/roles/backend/backend.service\n
+\t/home/ec2-user/DevSecOps/ansible/ansible-expense-project-usingRoles/roles/backend/tasks/files/backend.service\n
+\t/home/ec2-user/DevSecOps/ansible/ansible-expense-project-usingRoles/roles/backend/tasks/backend.service\n
+\t/home/ec2-user/DevSecOps/ansible/ansible-expense-project-usingRoles/files/backend.service\n
+\t/home/ec2-user/DevSecOps/ansible/ansible-expense-project-usingRoles/backend.service on the Ansible Controller.\n
+If you are using a module and expect the file to exist on the remote, see the remote_src option"}
+
+4. what is ansible handlers?
+-> Handlers in Ansible are special tasks that run only when notified by another task. They’re typically used to perform actions that 
+   should happen only if something changes, like restarting a service after installing or modifying its configuration.
+   Example: tasks/main.yaml
+			---------------
+			- name: copy expense config
+			  ansible.builtin.template:
+				src: expense.conf.j2
+				dest: /etc/nginx/default.d/expense.conf
+			  notify:
+			  - Restart nginx
+			  
+			handlers/main.yaml
+			------------------
+			- name: Restart nginx
+			  ansible.builtin.service:
+				name: nginx
+				state: restarted
+				
+-> 3components - database, backend and frontend
+-> 12 microservices
+
+5. Deployment in roles?
+-> deployment - there will be a folder that contains newly changes code
+-> before changing the version need to stop the server 
+-> need to remove old code 
+-> then need to download new code 
+-> restart the server 
+
+-> extract all the deployment tasks & create common role for each microservice in roles, that common contains tasks, vars etc.
+
+6. How do you control tasks in ansible?
+-> control tasks means, few tasks should run & few task sshouldn't run by using ansible tags. only the mentioned tasks will run except all.
+   Example: ansible-playbook -i inventory.ini <filename> -t <tagname>
+   - name: defining function
+	  hosts: local
+	  connection: local
+	  # vars:
+	  #   person: Abhi
+	  tasks: 
+	  - name: defining undefined variable
+		debug:
+		  msg: "Hello {{ person | default('Anjan') }}"
+
+	  - name: converting string into list
+		vars: 
+		  fruits: "apple, banana, cherry"
+		debug: 
+		  msg: "Fruits are {{ fruits | split(', ') }}"
+		  
+	  - name: converting map into list
+		vars:
+		  details: 
+			name: "Anjan"
+			locality: "bangalore"
+		debug:
+			msg: "My Info: {{ details | dict2items }}"
+
+	  - name: converting list into map
+		vars:
+		  fruits:
+			- fruit: apple
+			  color: red
+			- fruit: banana
+			  color: yellow
+			- fruit: cherry
+			  color: red
+			- fruit: dragonfruit
+			  color: pink
+		debug:
+		  msg: "fruits are: {{ fruits | items2dict (key_name='fruit', value_name='color') }}"
+
+	  - name: convert uppercase to lowercase
+		tags:
+		- uppertolower
+		vars:
+		  name: "ANJAN L S"
+		debug:
+		  msg: "name in lowercase: {{ name | lower }}, name in uppercase: {{ name | upper }}"
+
+	  - name: print min and max number
+		vars:
+		  numbers: [21,63,92,54,78,33,04,10,98]
+		debug: 
+		  msg: "min number is: {{numbers | min}}, max number is: {{numbers | max}}"
+
+	  - name: checking IP is valid or not
+		vars: 
+		  ip: "172.31.82.249"
+		debug:
+		  msg: "{{ip | ansible.utils.ipaddr}}"
+
+-> depends on our ansible management server Instance(t3.micro) type we can connect upto number of servers.

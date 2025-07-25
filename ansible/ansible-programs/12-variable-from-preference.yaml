@@ -1,0 +1,17 @@
+- name: printing the 1st variable preference
+  hosts: local
+  connection: local
+  vars:
+    greet: "playlevel"
+  vars_files:
+  - variables.yaml
+  vars_prompt:
+  - name: Greet
+    prompt: Enter your input
+    private: false
+  tasks:
+  - name: printing the task variable
+    vars:
+      greet: "task"
+    debug:
+      msg: "Hello from {{greet}}" 

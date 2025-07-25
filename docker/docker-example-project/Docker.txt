@@ -1,0 +1,50 @@
+Docker 
+------
+It is a open source platform used to develop, ship & run application in a containers.
+
+Container
+---------
+It's a light-weight, portable package of software that includes everything needed to run it: code, runtime, libraries, and dependencies.
+
+Image
+------
+It's a blueprint of a container.
+
+Docker Engine
+--------------
+It's a core software that runs and manages containers.
+
+Docker-Hub
+----------
+It's a public registry to find and share container Images.
+
+Docker-File
+-----------
+It's a text file with Instructions to build an Image.
+
+1. Why Use Docker?
+-> Works on any environment (dev, staging, production)
+   Simplifies dependency management
+   Faster app deployment
+   Lightweight compared to VMs
+   Great for CI/CD and microservices
+
+2. Docker Architecture?
+-> Docker Client: CLI or GUI tool to talk to Docker.
+   Docker Daemon (dockerd): Background service that manages Docker objects.
+   Docker Images: Read-only templates for containers.
+   Docker Containers: Instances of Docker images.
+   Docker Registries: (e.g., Docker Hub) to store and pull images.
+
+3. Basic commands of Docker
+-> docker --version                  # Check Docker version
+   docker pull nginx                 # Download nginx image
+   docker images                     # List downloaded images
+   docker run -d -p 8080:80 nginx    # Run container in detached mode
+   docker ps                         # List running containers
+   docker ps -a                      # List all running and stopped containers
+   docker stop <container_id>        # Stop a container
+   docker rm <container_id>          # Remove container
+   docker rmi <image_id>             # Remove image
+
+4. 

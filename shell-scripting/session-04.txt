@@ -1,0 +1,118 @@
+Session-14
+-----------
+
+Delete/Archive the old logs in linux server
+--------------------------------------------
+- we schedule few jobs to run and they run in a particular time, If the server/source contains more than 7 days log files then make it 
+  to archive and move to the storage/destination servers by zip. 
+- Steps to create it
+- Source directory & Destination directory mandatory, If forget throw the error with proper Info/usage
+- If path not found for the source & destination throw the error with proper Info/usage
+- Zip the files
+- number of days old logs/set default 7 days 
+- It check the zip package and if not found then install the package.
+- check zip file is success/not, If success delete the log files. If not then throw an error.
+- And also fetch the .zip files from the other servers to the current server and displays.
+- By using crontab we can schedule jobs/script for a required time in linux, Instead of running manually at each time.
+- crontab -e to edit the script according to the time it triggers * * * * * -> min hr day month year
+- all the data of cron jobs will stores in /var/log/cron path.
+- 30 9 * * * sudo sh /home/ec2-user/Expense-Project/04-Deleting-old-logs.sh -> placed in cronjob 
+- by using sudo less cron -> It displays the data in the file-path.
+- And we can also create <sudo sh 04-Deleting-old-logs.sh> this like a cmd like ls, tail, pwd etc.
+- It will help when we usually run in any machines by Installing through the AMI.
+- sudo cp 04-Deleting-old-logs.sh /usr/local/bin/backup.sh
+- sudo mv /usr/local/bin/backup.sh /usr/local/bin/backup
+- sudo chmod +x /usr/local/bin/backup
+- backup -> It is very easy to run whole script in a cmd like this.
+- [ ec2-user@ip-172-31-0-5 ~/Expense-Project ]$ backup
+- No log files older than 7 days found in /home/ec2-user/Expense-Project/expense-logs.
+- No ZIP file to send. Skipping SCP.
+
+crontab
+--------
+*  *  *  *  *
+|  |  |  |  |
+|  |  |  |  +----- Day of week (0-7) [0 or 7 = Sunday]
+|  |  |  +-------- Month (1-12)
+|  |  +----------- Day of month (1-31)
+|  +-------------- Hour (0-23)
++----------------- Minute (0-59)
+
+1.Developed a backup script for a linux servers. I installed the script in /usr/local/bin and tested in the server. It worked well. It 
+  configured into crontab But next day It got Failed!?
+- echo $PATH  -> Usually all the cmds will stores
+  /home/ec2-user/.local/bin: -> 
+  /home/ec2-user/bin: -> 
+  /usr/local/bin: -> It stores customized commands
+  /usr/bin: -> It stores system commands for normal users
+  /usr/local/sbin: -> It stores customized super user commands
+  /usr/sbin -> It stores system super user commands
+  /bin -> softlink to /usr/bin.. so keep the commands in /usr/bin
+- If we give any commands it will check those commands in all the above mentioned folder paths, If not found it will give "cmd not found"
+- sudo cp 04-Deleting-old-logs.sh /usr/local/bin/backup.sh
+- sudo mv /usr/local/bin/backup.sh /usr/local/bin/backup
+- sudo chmod +x /usr/local/bin/backup
+- [ ec2-user@ip-172-31-0-5 ~/Expense-Project ]$ backup
+- No log files older than 7 days found in /home/ec2-user/Expense-Project/expense-logs.
+- No ZIP file to send. Skipping SCP.
+- hash -r -> to reload the cache if we change and stores the cmd path in different.
+- which backup -> Display the cmd path {/usr/bin/backup}
+- crontab -e 
+- * * * * * backup -> It will run the file every minute 
+- sudo tail -f /var/log/cron -> It displays the output of the backup cmd
+- PATH=/usr/bin:/bin:/usr/local/bin -> crontab is minimal & not same env as when we run manual. we need mention full path for echo $PATH
+
+2.Monitor linux server disk usage, send an email if any disk is using more than 80%
+- df -hT -> Displays the server memory details
+Configuring email notification
+-------------------------------
+switch to root
+- sudo su -
+ 
+Install Postfix, the SASL authentication framework, and mailx.
+- dnf -y install postfix cyrus-sasl-plain mutt 
+
+Restart Postfix to detect the SASL framework.
+- systemctl restart postfix 
+
+Start Postfix on boot
+- systemctl enable postfix 
+
+Open the /etc/postfix/main.cf file to append the following into the file at the end of the file
+- vim /etc/postfix/main.cf 
+relayhost = [smtp.gmail.com]:587
+smtp_use_tls = yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+
+Configure Postfix SASL Credentials
+Add the Gmail credentials for authentication. Create a "/etc/postfix/sasl_passwd" file 
+- touch /etc/postfix/sasl_passwd 
+
+Add the following line to the file: "email" "ruahygvluyquplpp" 
+- vim /etc/postfix/sasl_passwd
+[smtp.gmail.com]:587 xyz@gmail.com:AppPassword
+
+Create a Postfix lookup table from the sasl_passwd text file by running the following command:
+- postmap /etc/postfix/sasl_passwd
+
+Verify Openssl config Add the following line under the section [provider_sect] 
+- vim /etc/ssl/openssl.cnf
+[provider_sect]
+legacy = legacy
+
+Restart Postfix to detect the SASL framework.
+- systemctl restart postfix 
+
+Sending mail Run the following command to send mail:
+- echo "This is a test mail & Date $(date)" | mutt -s "message" info@gmail.com
+
+3.How do you run other script from current shell-script?
+- Yes, we can run other script from current shell-script by mentioning the other script file in current script sh <filename.sh>, If we 
+  use source ./<filename.sh> the current complete file will be falls on mentioned source filename.sh and also we can access each other 
+  file variables if we use source ./<filename.sh> 
+  For example: we can use common-code.sh to place resuable code and access this file in a different files to execute by mentioning 
+  source ./common-code.sh it's like a reusable.

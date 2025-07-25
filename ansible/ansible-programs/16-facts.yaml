@@ -1,0 +1,10 @@
+- name: Printing the facts
+  hosts: web
+  tasks:
+  - name: Printing the facts
+    ansible.builtin.debug:
+      msg: "{{ ansible_facts }}"
+  
+  - name: Printing the host info
+    ansible.builtin.debug:
+      var: ansible_facts['default_ipv4']['address']

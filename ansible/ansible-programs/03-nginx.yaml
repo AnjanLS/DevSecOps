@@ -1,0 +1,21 @@
+- name: Install and start nginx
+  hosts: web
+  become: yes #equivalent to -b like root
+  tasks:
+  - name: install nginx
+    ansible.builtin.package:
+      name: nginx
+      state: present
+    register: package_status
+  - name: start the nginx
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: yes
+  - name: stop the nginx
+    ansible.builtin.service:
+      name: nginx
+      state: stopped
+  - name: Debug package Installation status
+    debug:
+      var: package_status

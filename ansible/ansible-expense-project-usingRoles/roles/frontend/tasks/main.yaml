@@ -1,0 +1,45 @@
+- name: Install nginx
+  package:
+    name: nginx
+    state: present
+
+- name: enable and start nginx service
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
+# - name: remove default content that web-browser is serving
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html
+#     state: absent
+
+# - name: create new html directory
+#   ansible.builtin.file:
+#     path: /usr/share/nginx/html
+#     state: directory
+
+# - name: download frontend data
+#   ansible.builtin.get_url:
+#     url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+#     dest: /tmp/frontend.zip
+
+# - name: extract the downloaded data
+#   ansible.builtin.unarchive:
+#     src: /tmp/frontend.zip
+#     dest: /usr/share/nginx/html
+#     remote_src: yes
+
+- name: include common role
+  include_role:
+    name: common
+    # tasks_from: main  #default it'll take main.yaml/ mention presence filename
+
+- name: copy expense config
+  ansible.builtin.template:
+    src: expense.conf.j2
+    dest: /etc/nginx/default.d/expense.conf
+  notify:
+  - Restart nginx
+
+  

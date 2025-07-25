@@ -1,0 +1,122 @@
+Session-12
+----------
+1. what is function?
+-> function is a reusable block of code that performs a specific task, It helps in reducing redundancy, Improving code maintainability,
+   and making scripts more modular and maintainable.
+   SYNTAX-1 with function keyword: 
+   -------------------------------
+   function function_name()
+   {
+	  #function_body
+   }
+   
+   SYNTAX-2 without function keyword:
+   ----------------------------------
+   function_name()
+   {
+	  #function_body
+   }
+   
+   Ex for positional parameter:
+   ----------------------------
+   #!/bin/bash
+   greet()
+   {
+		echo "Hello, $1!"      #$1 is a positional parameter represent the first argument passed to the function.
+   }
+   greet "Alice"
+
+2.  WAP for summation of 2 numbers.
+->  A function can return a status code (0 for success, non-zero for failure) using return:
+	#!/bin/bash
+	add_numbers() {
+		sum=$(( $1 + $2 ))
+		return $sum  # Returns only numeric values (0-255)
+	}
+
+	add_numbers 5 10
+	echo "Sum is $? (Limited to 0-255)"
+	
+	For larger return values, use echo:
+	#!/bin/bash
+	add_numbers() {
+    echo $(( $1 + $2 ))
+	}
+
+	result=$(add_numbers 5 10)
+	echo "Sum is $result"
+
+3. What is color codes? and why it is used?
+-> A script can use escape sequences to produce colored text on the terminal. Colors for text are represented by color codes, including,
+   reset = 0, black = 30, red = 31, green = 32, yellow = 33, blue = 34, magenta = 35, cyan = 36, and white = 37
+   eg: echo -e "I am robot, \e[31m Hello world!"    #display the text in red
+
+history -> it will stores the cmd which we executed on the terminal.
+
+Logs -> files or records that document events, activities, and operations within a system, application, or network device, used for 
+troubleshooting, monitoring, and security purposes. 
+
+In shell-script,
+< = Input
+ex: sort < unsorted.txt	#we are passisng the txt file data for sorting
+> = Output
+ex: ls -l > output.log
+	cat output.log	#it will stores the list of data by the cmd ls in the output.log file
+	suppose if i use like this
+	ls -l 1> output.log	#1 means if cmd will success then only it stores the data in the .log files
+	ls -l 2> output.log	#2 means if cmd will fails then only it display the data & not stores in the .log files
+	ls -l &> output.log	#& means if cmd will success/failure it stores the data in the .log files everytime it will replace
+	ls -l &>> output.log	#& means if cmd will success/failure it stores the data in the .log files everytime >> it will not replace
+	
+echo "anjansriram.98@gmail.com" | cut -d "." -f1 &>>names.txt
+-d means delimiter whenever it appears split & means ture/false >> means append totally appending the name to .txt file
+
+/DevSecOps/Shell-Scripting/18-logs.sh - automate the script to install packages & stores it in logs
+/var/log/shellscript-logs - path the log files are stored for a each run.
+sudo sh -x 18-logs.sh - To execute the shell-script file degub mode
+In DNS, TTL means Time TO Live
+directory .service file availabe in /etc/systemd/system
+
+4. what is loops?
+-> loops are used to execute block of code multiple times. they are essential for automation , repetation & iterating over data.
+   There are 4 types of loops in shell-scripting
+   ---------------------------------------------
+   a. for loop: Used to iterate over a list of items.
+   
+   ex1: for item in 1 2 3 4 5
+		do
+		  echo "Item: $item"
+		done
+		
+	ex2:for (( i=1; i<=5; i++ ))
+		do
+		  echo "Count: $i"
+		done	
+		
+	b. While loop: Executes the block as long as the condition is true.
+	
+	ex: count=1
+		while [ $count -le 5 ]
+		do
+		  echo "Count is $count"
+		  ((count++))
+		done
+	
+    c. until loop: Executes the block until the condition becomes true.
+	
+	ex: count=1
+		until [ $count -gt 5 ]
+		do
+		  echo "Count is $count"
+		  ((count++))
+		done
+		
+	d. select loop: Useful for creating menus in shell scripts.
+	
+	ex: select option in "Start" "Stop" "Exit"
+		do
+		  echo "You chose $option"
+		  break
+		done
+		
+we can automate the script by using loops also you can find it in https://github.com/AnjanLS/DevSecOps/blob/main/Shell-Scripting/20-automate-using-loops.sh

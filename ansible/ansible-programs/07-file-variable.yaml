@@ -1,0 +1,9 @@
+- name: print the file variables
+  hosts: local
+  connection: local
+  vars_files:
+  - variables.yaml
+  tasks:
+  - name: print the details
+    ansible.builtin.debug:
+      msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}

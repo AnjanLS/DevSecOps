@@ -1,0 +1,57 @@
+- name: defining function
+  hosts: local
+  connection: local
+  # vars:
+  #   person: Abhi
+  tasks: 
+  - name: defining undefined variable
+    debug:
+      msg: "Hello {{ person | default('Anjan') }}"
+
+  - name: converting string into list
+    vars: 
+      fruits: "apple, banana, cherry"
+    debug: 
+      msg: "Fruits are {{ fruits | split(', ') }}"
+      
+  - name: converting map into list
+    vars:
+      details: 
+        name: "Anjan"
+        locality: "bangalore"
+    debug:
+        msg: "My Info: {{ details | dict2items }}"
+
+  - name: converting list into map
+    vars:
+      fruits:
+        - fruit: apple
+          color: red
+        - fruit: banana
+          color: yellow
+        - fruit: cherry
+          color: red
+        - fruit: dragonfruit
+          color: pink
+    debug:
+      msg: "fruits are: {{ fruits | items2dict (key_name='fruit', value_name='color') }}"
+
+  - name: convert uppercase to lowercase
+    tags:
+    - uppertolower
+    vars:
+      name: "ANJAN L S"
+    debug:
+      msg: "name in lowercase: {{ name | lower }}, name in uppercase: {{ name | upper }}"
+
+  - name: print min and max number
+    vars:
+      numbers: [21,63,92,54,78,33,04,10,98]
+    debug: 
+      msg: "min number is: {{numbers | min}}, max number is: {{numbers | max}}"
+
+  - name: checking IP is valid or not
+    vars: 
+      ip: "172.31.82.249"
+    debug:
+      msg: "{{ip | ansible.utils.ipaddr}}"

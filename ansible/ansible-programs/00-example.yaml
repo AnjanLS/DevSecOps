@@ -1,0 +1,23 @@
+- name: Anjan
+  email: anjan@gmail.com
+  address: 
+  - type: "permanent address"
+    doorno: 123
+    street: gandhinagar
+    city: bangalore
+  - type: "permanent address"
+    doorno: 123
+    street: gandhinagar
+    city: bangalore
+
+- name: Amar
+  email: amar@gmail.com
+  address: 
+  - type: "permanent address"
+    doorno: 123
+    street: jayanagara
+    city: bangalore
+  - type: "permanent address"
+    doorno: 123
+    street: jayanagara
+    city: bangalore

@@ -1,0 +1,7 @@
+- name: printing variables from commandline
+  hosts: local
+  connection: local
+  tasks:
+  - name: print the variable
+    debug:
+      msg: "My name is {{name}} and my address is {{locality, city, pin}}"

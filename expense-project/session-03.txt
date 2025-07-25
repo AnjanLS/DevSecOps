@@ -1,0 +1,182 @@
+Session-08
+==========
+
+database-server
+---------------
+sudo su -
+dnf install mysql-server -y
+systemctl enable mysqld
+systemctl start mysqld
+mysql_secure_installation --set-root-pass ExpenseApp@1
+ps -ef | grep mysql - To know the current running mysql processes
+netstat -lntp - Active Internet connections
+systemctl status mysqld
+mysql - Login to the server
+
+backend-server
+--------------
+sudo su -
+dnf module disable nodejs -y
+dnf module enable nodejs:20 -y
+dnf install nodejs -y
+useradd expense
+mkdir /app
+curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+cd /app
+unzip /tmp/backend.zip
+npm install
+vim /etc/systemd/system/backend.service
+
+[Unit]
+Description = Backend Service
+
+[Service]
+User=expense
+Environment=DB_HOST="<MYSQL-SERVER-PRIVATE-IPADDRESS>"
+ExecStart=/bin/node /app/index.js
+SyslogIdentifier=backend
+
+[Install]
+WantedBy=multi-user.target
+
+cat /etc/systemd/system/backend.service
+systemctl daemon-reload
+systemctl start backend
+systemctl enable backend
+systemctl status backend
+dnf install mysql -y
+mysql -h <DATABASE-PRIVATE-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
+systemctl restart backend
+systemctl status backend
+netstat -lntp
+ps -ef | grep node
+cd /var/log/
+ls -l
+cat messages
+
+frontend-server
+---------------
+sudo su -
+dnf install nginx -y
+systemctl enable nginx
+systemctl start nginx
+rm -rf /usr/share/nginx/html/*
+curl -o /tmp/frontend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+cd /usr/share/nginx/html/
+unzip /tmp/frontend.zip
+vim /etc/nginx/default.d/expense.conf
+
+proxy_http_version 1.1;
+
+location /api/ { proxy_pass http://<BACKEND-PRIVATE-IPADDRESS>:8080/; }
+
+location /health {
+  stub_status on;
+  access_log off;
+}
+
+cat /etc/nginx/default.d/expense.conf
+systemctl restart nginx
+netstat -lntp
+systemctl status nginx
+cd /var/log/nginx/
+ls -l
+cat access.log
+less access.log - to see a limited info 
+tail -f access.log - it will fetch the last 10 lines of log
+
+Check if nginx Failed - port 80 will be available for nginx to run web-server, If it's port is aquried by other process just kill it.
+check the port status -  netstat -tuln | grep :80
+kill the nginx web-server -   pkill nginx
+restart the web-server -  systemctl restart nginx
+
+DNS (Domain name system)
+------------------------
+1. what is DNS?
+-> DNS stands for Domain Name System, which is a system that translates domain names into IP addresses.
+ex: Human-readable names like "www.example.com"
+
+2. How DNS works?
+-> It translates domain names into IP addresses, allowing browsers to access websites and other internet resources.
+
+public IP - when we stop and restart the instance the public IP will change.
+private IP - but when terminate and recreate again private IP will changes
+
+-> machine will always access with the IP-address.
+-> humans will always access with the domain name.
+-> whenever backend IP changes, I should edit systemctl file, daemon-reload and restart the service.
+-> word=meaning, name=ph-number likewise DNS=IP-address.
+-> When searching on a web browser, the OS checks for the IP address. If not found, the browser will first check its cache, then the OS cache. 
+   If it's still unavailable, the ISP will provide the required IP address, checking its cache for any previously visited IP address.
+-> The ISP includes a DNS resolver, which is responsible for retrieving the IP address for our domain, and DNS Resolver also includes cache.
+-> If the IP address is not found in the DNS resolver cache, ICANN (Internet Corporation for Assigned Names and Numbers) manages the DNS. 
+   Root servers, maintained by countries and reputable organizations, handle this, with 13 root servers worldwide.
+-> top level domains are .telugu, .com, .in, .uk, .net, .au, .ai, .org, .edu, .gov etc
+-> sub domains it includes 2 domains those are like .gov.in, .co.in etc
+-> To start a domain, we must contact ICANN for approval and official registration. Once the process is complete, people can register with our domain.
+   ex: joindevops.telugu, TFI.telugu etc
+-> Domain registrars(mediators) like GoDaddy, Hostinger, AWS, GCP, and Azure allow us to register and purchase domains, such as tfi.telugu.
+-> https://en.wikipedia.org/wiki/List_of_Internet_top-level_domains It contains all the related Info regarding DNS.
+-> We can purchase a domain from Hostinger, which is affordable. When we buy a domain like anjan.online, it gets updated in the Radix registry, 
+   including details like the domain owner and nameservers.
+-> The DNS resolver is configured to root servers, with 13 root servers in total. The request is directed to the one that holds the relevant information.
+-> Then root servers will gives the related DNS info and the root servers are registered with the ICANN
+-> For example, when searching for google.com, the root server registered with ICANN directs the DNS resolver to the .com TLD, The .com TLD provides 
+   the nameservers, and the DNS resolver then contacts the nameservers, which return the corresponding IP address.
+-> nameservers will manages the domain and records/IP-address to the DNS
+-> Our entire infrastructure will be hosted on AWS. When the IP addresses are in AWS, it's easy to update them if they change after instance 
+   recreation. In the future, we will need to create many IP addresses, and manually updating them through Hostinger can be cumbersome. However, 
+   if the IPs are managed in AWS using Terraform, we can update them effortlessly.
+-> In AWS, under the hosted zone, we need to create a DNS record with our domain name. AWS will provide us with four nameservers. These nameservers 
+   should then be added to Hostinger’s nameserver settings. After updating the nameservers in Hostinger, the changes will be propagated to the .shop 
+   top-level domain (TLD), now aws manages my domain.
+-> We can create a new record in AWS by using the MySQL private IP. Then, we configure the record name in the backend:
+   mysql.anjansriram.shop → DNS Resolver → .shop TLD → Provides nameservers to anjansriram.shop → A record (stores the database server's private IP).
+
+-> Create a Hosted zone with domain name & no need other details - anjansriram.shop 
+
+
+Record Types
+============
+A -> points to IP-address
+CNAME -> points to another domain
+MX -> mail records
+TXT -> domain ownership validation purpose
+NS -> nameservers
+SOA -> who is the authority of this domain
+
+-> TTL (time to live) is a feature that automatically deletes data after a specified amount of time. If we use less number it will be in dynamic environment.
+-> The data will POST the payload and GET the data to preview this process can follow up through the Inspect.
+-> If the request URL contains `/api/`, only then will the request be sent to the backend (e.g., `http://anjansriram.shop/api/transaction`). Nginx scans all requests and forwards 
+   them to the backend, which responds with the necessary data.
+-> we can also check the logs in frontend /var/log/nginx/ folder, it contains access.log and error.log
+-> In backend all the requests data will store in /var/log/messages
+
+3. what is Inode? 
+-> Inode stores the file type(file/directory), permissios, ownership, file size, time stamp, disk location(memory location)
+-> ls -li, to display the node number ( 4641891 -rw-r--r--  1 root root   142 Feb 25  2024 DbConfig.js)
+-> stat DbConfig.js, It will dispaly all the info
+[ root@ip-172-31-37-44 /app ]# stat DbConfig.js
+  File: DbConfig.js
+  Size: 142             Blocks: 8          IO Block: 4096   regular file
+Device: fd00h/64768d    Inode: 4641891     Links: 1
+Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2025-02-25 07:17:03.044507193 +0000
+Modify: 2024-02-25 13:19:53.000000000 +0000
+Change: 2025-02-25 07:15:24.840364750 +0000
+ Birth: 2025-02-25 07:15:24.840364750 +0000
+
+4. what is symlink/soft link?
+-> A symlink is like a shortcut that points to the original file. The symlink has its own inode, which is different from the actual file's inode. 
+   symlink breaks when actual file is deleted
+eg: ln -s Dbconfig.js Dbconfig1.js
+link file - lrwxrwxrwx  1 root root    11 Feb 25 18:42 DbConfig1.js -> DbConfig.js
+
+5. what is hardlink?
+-> hardlink is useful for backup of the file and inode is same as actual file, If original file is deleted hardlink remains same.	
+eg: ln Dbconfig.js Dbconfig1.js
+ 4641891 -rw-r--r--  1 root root   142 Feb 25  2024 DbConfig.js
+ 4641891 lrwxrwxrwx  1 root root    11 Feb 25 18:42 DbConfig1.js
+
+6. How to find out hardlinks for a particular file?
+-> find / -inum 4641891

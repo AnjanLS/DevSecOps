@@ -1,0 +1,120 @@
+Session-06
+==========
+
+3-tier architecture
+-------------------
+1. Destop application
+2. Web application
+
+Disadvantages of Destop application
+-----------------------------------
+1. Installation
+2. Upgrade
+3. Storage
+4. Compatabality
+5. If system crash we will loose the data
+6. more system resources
+
+-> only 1 server can't handle multile requests from DB, python, HTML application.
+-> CRUD - create, delete, update and delete these operations will takes place from the DB.
+-> the data will be stored in the form tables and rows,so it will easy to fetch the info this is called RDBMS.
+-> DB, it collects the raw data
+-> Application server responsibility is to access the DB and do CRUD operations by using query.
+-> Web server responsibility is queue the requests, collect the requests and forward the requests to application server and format the data
+-> load balancer is a device, software, or cloud service that distributes incoming user traffic across multiple servers or applications.
+-> If we use applications it will directly requests to the application server and it have a better user interface, application server also have 
+   load balancer which accepts multiple requests.
+   
+Load Balancer -> Web Server -> Application Server -> DB
+-------------------------------------------------------
+-> DB Tier - RDBMS(MYSQL, Oracle, postgress, etc.), NOSQL(MongoDB), Redis(Cache), RabbitMQ(Queue Based)
+-> Application/API Tier - Backend/Middleware Applications - .Net, Python, Java, Nodejs, Go, etc.
+-> Web(Frontend) Tier - Load balancer, Frontend servers - HTML, css, JS, ReactJS, AngularJS
+-> MERN - MongoDB, ExpressJS, ReactJS, NodeJS 
+
+3-tier architecture ec2-server steps
+------------------------------------
+create server name - database-server
+choose AMI(community group-RHEL9) - devops-practice
+Instance type - t3.micro
+key pair - no need
+security group - allow-all -> launch instance
+connect from git-bash - ssh ec2-user@<IP-address> -> (password)DevOps321
+
+-> architect/developer will decide to choose the DB and cmds in a real time Hence, we are trying to install it up and configure it.
+-> we need switch to root user - sudo su -
+-> install mysql server 8.0x - dnf install mysql-server -y
+-> Linux server is physical -> If we download any other server inside physical server like mysql it is logical server
+-> start the mysql service - systemctl enable mysqld, systemctl start mysqld, systemctl status mysqld/pf -ef | grep mysql
+-> to check the port - netstat -lntp
+-> We need to change the default root password in order to start using the database service. Use password ExpenseApp@1 or any other as per your choice.
+-> mysql_secure_installation --set-root-pass ExpenseApp@1
+-> git bash is client for linux server,if we need mysql client to connect for mysql server but mysql server is downloaded by mysql client(mysql cmd-line).
+-> to access mysql - mysql
+-> mysql server architecture contains - users schema/database, videos schema/database, photos schema/database, Live schema/database.
+-> display the schema/database available - show databases;
+-> to use the schema/database - use <database-name>;
+-> display all the tables in the schema - show tables;
+-> display the data in the table - select * from <table-name>;
+-> get out from the server - exit
+
+
+create backend-server - backend-server
+choose AMI(community group-RHEL9) - devops-practice
+Instance type - t3.micro
+key pair - no need
+security group - allow-all -> launch instance
+connect from git-bash - ssh ec2-user@<IP-address> -> (password)DevOps321
+
+-> Backend service is responsible for adding the given values to database. Backend service is written in NodeJS, Hence we need to install NodeJS.
+-> Developer has chosen NodeJs, Check with developer which version of NodeJS is needed. Developer has set a context that it can work with NodeJS >20
+-> Install NodeJS, By default NodeJS 16 is available, We would like to enable 20 version and install
+-> we need switch to root user - sudo su -
+-> It will display the available version/Info - dnf list available | grep nodejs 
+-> we can enable different versions in nodejs,disabling unwanted versions - dnf module disable nodejs -y
+-> we can enable with the version mentioned - dnf module enable nodejs:20 -y
+-> after mention version and then we can download the os - dnf install nodejs -y
+-> User expense is a function / daemon user to run the application. Apart from that we don't use this user to login to server.
+   Also, username expense has been picked because it more suits to our project name - useradd expense
+-> We keep application in one standard location. This is a usual practice that runs in the organization.
+   setup an app directory from root - mkdir /app
+-> Download the application code to created app directory - curl -o /tmp/backend.zip https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+-> /tmp/ files includes the developer written code - cd /tmp/
+-> change the directory to /app which we created - cd /app/
+-> unzip the downloaded zip file at specific path - unzip /tmp/backend.zip
+-> Regardless of the programming language, the build file typically contains important project information, such as the project name, version, 
+   description, and dependencies. To run the project, it is necessary to install these dependencies.
+-> programs depends on libraries/dependencies like #include <stdio.h>
+-> Nodejs - package.json(build file) contains project version, description, libraries/dependencies required by nodejs
+-> java - pom.xml - mvn package(tools used to manage dependencies)
+-> .NET - msbuild - 
+-> python - requirements.txt - pip install
+-> c - makefile - make
+-> cd /app/
+-> read the build file,download and install all the requirements as per .json from the internet - npm install
+-> It contains all the dependencies which downloaded from the Internet - /node_modules
+-> dnf install nginx - systemctl start nginx
+-> service means it should run continously so, We need to setup a new service in systemd so systemctl can manage this service - 
+   /etc/systemd/system - create a .service file
+-> Setup SystemD Expense Backend Service - cd /etc/systemd/system
+-> vim /etc/systemd/system/backend.service
+->  [Unit]
+	Description = Backend Service
+
+	[Service]
+	User=expense
+	Environment=DB_HOST="<MYSQL-SERVER-PRIVATE-IPADDRESS>"
+	ExecStart=/bin/node /app/index.js
+	SyslogIdentifier=backend
+
+	[Install]
+	WantedBy=multi-user.target
+-> NOTE: Ensure you replace with IP address
+-> Load the service - systemctl daemon-reload
+-> Start the service - systemctl start backend, systemctl enable backend, systemctl status backend
+-> For this application to work fully functional we need to load schema to the Database.We need to load the schema. To load schema we need to install 
+   mysql client - dnf install mysql -y
+-> mysql -h <MYSQL-SERVER-PRIVATE-IPADDRESS> -uroot -pExpenseApp@1 < /app/schema/backend.sql
+-> so we are accessing database server from application server
+-> restart the service - systemctl restart backend
+-> then we can play with the sql commands.

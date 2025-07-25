@@ -1,0 +1,12 @@
+- name: variables
+  hosts: local 
+  connection: local
+  vars:
+    name: Anjan
+    locality: gandhinagar
+    city: bangalore
+    pin: 560071
+  tasks:
+  - name: print the variables
+    ansible.builtin.debug:
+      msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}

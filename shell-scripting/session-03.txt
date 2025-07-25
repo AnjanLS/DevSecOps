@@ -1,0 +1,113 @@
+Session-13-deploying the app on the server
+------------------------------------------
+plain server -> app runtime(nodejs), create user, create app folder, download the code, install dependencies, create systemctl services,
+start the application.
+
+Before writing a script
+-----------------------
+- check user has root access/not
+- store logs
+- try to use colors
+- install mysql-server
+- enable it
+- start it
+- set the root password
+- idempotency(even you run any number of times, it should not change the result.)
+- HTTP GET - idempotent
+- HTTP POST - chance of duplicate of errors, we need handle this in the programming
+- HTTP PUT - no problem, but we can say it is already updated.
+- HTTP DELETE - chance of error, resource not found. handle this in programming/coding
+- chown -R ec2-user:ec2-user /home/ec2-user/Expense-Project/expense-logs -> fetch the logs from the both servers and store it in specified path
+
+The complete project source code is here https://github.com/AnjanLS/Expense-Project.git
+
+Deploying application in the server
+-----------------------------------
+- https://github.com/AnjanLS/Expense-Project.git -> you can find the script files in the link
+- launch 3 Instances & name it ->	Database-server
+									Backend-server
+									Frontend-server
+- Connect through SSH to Instances & Clone the project in each Instances 
+- git  pull -> to get files from remote repo
+- Change the frontend-server <public-IP-address> in DNS to run it in HTTP request
+- run the cmd in database-server -> sudo sh 01-mysql.sh 
+- run the cmd in backend-server -> sudo sh 02-backend.sh 
+- run the cmd in frontend-server -> sudo sh 01-frontend.sh 
+- when we run the cmds in each server it will install the dependencies and run the required packages for project
+- /home/ec2-user/Expense-Project/expense-logs -> all the project logs are stored in this path
+- If we need to run the application with passwd_less for fethching logs from each server, we need to configure .SSH in every srever.
+- Use sudo mysql to login to the mysql in database-server, you can see the data in transactions databse.
+- Follow the below steps to configure .ssh
+
+To generate SSH keys on each server
+-----------------------------------
+- ssh-keygen -t rsa -b 2048 -f /home/ec2-user/.ssh/id_rsa -q -N "" -> Run this on each server (DB, backend, frontend) to generate ssh keys
+
+On Database Server
+------------------
+- ssh-copy-id ec2-user@<PRIVATE-IP-address>   # To Backend
+- ssh-copy-id ec2-user@<PRIVATE-IP-address>   # To Frontend
+
+On Backend Server
+-----------------
+- ssh-copy-id ec2-user@<PRIVATE-IP-address>  # To Database
+- ssh-copy-id ec2-user@<PRIVATE-IP-address>  # To Frontend
+
+On Frontend Server
+------------------
+- ssh-copy-id ec2-user@<PRIVATE-IP-address>  # To Database
+- ssh-copy-id ec2-user@<PRIVATE-IP-address>  # To Backend
+
+.ssh file in /home/ec2-user/.ssh make sure the file permissions
+----------------------------------------------------------------
+mkdir -p /home/ec2-user/.ssh -> This dir will created If not created 
+chown ec2-user:ec2-user /home/ec2-user/.ssh -> File ownership
+chmod 700 /home/ec2-user/.ssh -> File permissions read, write & execute
+
+Mount other server public-key into authorized_keys file /home/ec2-user/.ssh/authorized_keys
+--------------------------------------------------------------------------------------------
+cat /home/ec2-user/.ssh/id_rsa.pub -> Display the public keys to share with the other servers
+echo "PASTE_PUBLIC_KEY_HERE" >> /home/ec2-user/.ssh/authorized_keys -> paste the other server public key in authorized_keys file
+
+authorized_keys file permissions
+---------------------------------
+chmod 600 /home/ec2-user/.ssh/authorized_keys
+chown ec2-user:ec2-user /home/ec2-user/.ssh/authorized_keys
+
+Need to configure sshd_config file for authentication less using PubkeyAuthentication
+--------------------------------------------------------------------------------------
+ls -l /etc/ssh/sshd_config -> To display the File & Permissions may be blocking to check it
+-rw------- 1 root root ... /etc/ssh/sshd_config -> Expected output
+sudo grep -iE 'PermitRootLogin|PasswordAuthentication|PubkeyAuthentication' /etc/ssh/sshd_config -> to check required config for parameters
+required/change the default to below permissions->	PasswordAuthentication no
+													PubkeyAuthentication yes
+													PermitRootLogin no
+
+steps to change the permissions in sshd_config file(but you can't edit the sshd_config file)
+--------------------------------------------------------------------------------------------
+sudo vi /etc/ssh/sshd_config -> you can't edit this then try the below steps
+sudo cp /etc/ssh/sshd_config /tmp/sshd_config
+sudo vi /tmp/sshd_config
+required permissions->	PasswordAuthentication no
+						PubkeyAuthentication yes
+						PermitRootLogin no
+sudo cp /tmp/sshd_config /etc/ssh/sshd_config
+
+If you still facing any problems with sshd_config
+--------------------------------------------------
+sudo ls -l /etc/ssh/.*swp -> run this cmd to see swap file
+sudo rm -f /etc/ssh/.sshd_config.swp -> If found run this to remove swap file
+lsattr /etc/ssh/sshd_config -> Check if the file is immutable
+----i-------- /etc/ssh/sshd_config -> The i flag means the file is immutable — it can't be modified, even by root.
+sudo chattr -i /etc/ssh/sshd_config -> To remove immutable flag
+mount | grep ' / ' -> Filesystem Might Be Read-Only its rare but check
+sudo mount -o remount,rw / -> If you see ro instead of rw, your filesystem is read-only. You'll need to remount it:
+sudo cp /tmp/sshd_config /etc/ssh/sshd_config -> copy the requirement changed file to the exact path.
+
+reload the sshd_config file
+----------------------------
+sudo systemctl restart sshd -> To resync the changed configuration and run correctly
+
+Delete/Archive the old logs in linux server
+--------------------------------------------
+If the server contains more than 15 days log files then make it to archive and move to the storage servers.

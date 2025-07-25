@@ -1,0 +1,76 @@
+#!/bin/bash
+
+export HOME=/home/ec2-user # using sudo sh script.sh, the script runs as root, but SSH keys are in /home/ec2-user/.ssh
+
+USERID=$(id -u)    #check the user id 
+
+R="\e[31m"
+G="\e[32m"
+Y="\e[33m"
+P="\e[35m"
+N="\e[0m"
+
+LOGS_FOLDER="/home/ec2-user/Expense-Project/expense-logs"
+LOG_FILE=$(echo $0 | cut -d "." -f1)
+TIMESTAMP=$(date +%d-%m-%Y-%H-%M-%S)
+LOG_FILE_NAME="$LOGS_FOLDER/$LOG_FILE-$TIMESTAMP.log"
+
+VALIDATE(){
+    if [ $1 -ne 0 ]; then 
+        echo -e "$2 is $R Failure... $N" 
+        exit 1    #Failure occurs terminate the script without continuing      
+    else
+        echo -e "$2 is $G Success... $N"
+    fi
+}
+
+CHECK_ROOT(){
+    if [ $USERID -ne 0 ]; then
+        echo "Error:: you must have sudo access to privilage the script."
+        exit 1    #Failure occurs terminate the script without continuing
+    fi
+}
+
+mkdir -p $LOGS_FOLDER
+echo "script started executing at: $TIMESTAMP" &>>$LOG_FILE_NAME
+
+CHECK_ROOT
+
+dnf list installed mysql-server -y &>>$LOG_FILE_NAME
+if [ $? -ne 0 ]
+then 
+    dnf install mysql-server -y &>>$LOG_FILE_NAME
+    VALIDATE $? "Installing mysql-server"
+    systemctl enable mysqld &>>$LOG_FILE_NAME
+    VALIDATE $? "Enabling mysql-server"
+    systemctl start mysqld &>>$LOG_FILE_NAME
+    VALIDATE $? "Starting mysql-server"
+    mysql_secure_installation --set-root-pass ExpenseApp@1 &>>$LOG_FILE_NAME
+    VALIDATE $? "setting root password for mysql-server"
+else
+    echo -e "Mysql-server... is already $Y Installed $N"
+    echo -e "Mysql-server root password already setup $P SKIPPING $N"
+fi
+
+systemctl status mysqld &>>$LOG_FILE_NAME #To check the status for mysqld
+VALIDATE $? "Checking status mysqld"
+
+netstat -lntp &>>$LOG_FILE_NAME #Active Internet connections
+ps -ef | grep mysqld &>>$LOG_FILE_NAME #current running process for mysqld
+
+mysql -h mysql.anjansriram.shop -u root -pExpenseApp@1 -e 'show databases;' &>>$LOG_FILE_NAME #command to connect mysql database
+VALIDATE $? "Logging into database host"
+
+# Define the private IPs (or internal DNS names) of all servers
+OTHER_SERVERS=(
+    "ec2-user@172.31.0.8"  # Backend
+    "ec2-user@172.31.0.5"  # Frontend 
+)
+
+# Copy logs from each server
+for server in "${OTHER_SERVERS[@]}"; do
+  echo "Fetching logs from $server..."
+  sudo -u ec2-user scp -q "$server":"$LOGS_FOLDER/"*.log "$LOGS_FOLDER/" 2>/dev/null
+done
+
+echo "Logs from all servers are now in: $LOGS_FOLDER"

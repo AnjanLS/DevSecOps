@@ -1,0 +1,149 @@
+Session-10
+==========
+
+1. What is shell scripting?
+-> If you keep all your commands in a single file and execute that file. then it will make less human error and less time taking.
+   native linux scripting -> linux/shell commands 
+   If we want to do anything automate the work then we can do shell scripting
+   If we want to fetch some info from linux server/AWS cloud then we can do python.
+   
+-> Git Implementations are Github, Gitlab, Bitbucket, Azure repos, AWS code commit etc, only user Interface is different but all 
+   commands are same.
+-> When we are using git for commit for the first time need to mention credentials, then only we can access to remote.
+
+steps to follow for project Implementations through git
+-------------------------------------------------------
+1. creation of repos
+
+2. clone repo to our laptop
+git clone <link>
+
+3. we develop the code
+
+4. select some editor, like vs-code/ some other editor
+
+5. add code to staging area
+git add <file-name>
+git add . -> all files will be added to the staging area
+
+6. commit to local repo
+git commit -m "message"
+
+7. git push origin main
+origin means remote repo, and the branch is currently using main
+
+8. To clone/download into the local machine from the remote repo
+   git clone <url>
+   
+9. we can also execute like this
+   git add . ; git commit -m "first-commit" ; git push origin main
+   
+10. git log - which contains the info related to the commits.
+
+11. git commit
+	git pull origin main - used to pull the changes from remote to local server/host.
+
+----------------------------------------------- ----------------------------------------------
+Local machine --> Staging area --> Local repo | |--> Remote repo --> clone to other machines |
+----------------------------------------------- ----------------------------------------------
+               Local Environment                             Distributed
+			   
+Local machine -> code will be developed here by using like vs-code.
+Staging area -> commits can be formatted and reviewed before completing the commit, It is a launchpad and also temporary area
+Local repo -> the one on which we will make local changes and stores the data, typically this local repository is on our computer. 
+              Git remote repository is the one of the server. once commit by staging area we can't change here.
+Remote repo -> this repo is located in git which is shared with multiple machines/laptop by cloning(download). 
+
+-> There are multiple tools like git, SVN -> sub version control, It is a centralised which means everything at one place.
+
+-> centralised vs decentralised
+Aspect			Centralised				Decentralised
+------          ------------            --------------
+Efficiency		Faster decision-making	Slower due to coordination
+Security		Easier to protect		Harder to control risks
+Flexibility		Rigid structure			More adaptable
+Transparency	Can be opaque			Often more transparent
+Scalability		Easier to scale			Harder due to complexity
+
+2. What is Version Control? and Why
+-> Version control is a system that tracks changes to files over time, allowing multiple users to collaborate, manage revisions, and 
+   restore previous versions if needed. It is commonly used in software development, document management, and any project that requires 
+   maintaining a history of changes.
+
+Collaboration –> Multiple people can work on the same project simultaneously without overwriting each other’s changes.
+Change Tracking –> Keeps a history of modifications, so you can see who changed what and when.
+Backup & Recovery –> Allows reverting to a previous version if a mistake is made or if bugs are introduced.
+Branching & Merging –> Developers can create separate branches for new features, test them independently, and merge them back into the 
+                       main project when ready.
+Code Integrity –> Prevents conflicts by managing different versions and resolving changes efficiently.
+
+Types of Version Control Systems
+---------------------------------
+-> Local Version Control – Files are stored and tracked on a local machine (e.g., manual backups, simple file history).
+-> Centralized Version Control (CVCS) – A single central server stores all files, and users pull/update from that server 
+                                        (e.g., SVN, Perforce).
+-> Distributed Version Control (DVCS) – Each user has a complete copy of the repository, enabling offline work and better collaboration (e.g., Git, Mercurial).
+
+Popular Version Control Tools
+------------------------------
+-> Git – The most widely used DVCS, used with platforms like GitHub, GitLab, and Bitbucket.
+-> SVN (Subversion) – A centralized version control system used in enterprises.
+-> Mercurial – Another DVCS, similar to Git but with a different workflow.
+
+Disadvantages of shell-script
+-----------------------------
+-> No Error Handling, we need to check manually.
+-> Not Idempotent
+-> It is homogenous, It only works for particular distribution.
+-> Not scalable to many servers
+-> No password security
+-> Syntax is complex
+-> 
+
+shell scripting
+---------------
+.sh -> shell script extension
+1. what is shebang? 
+-> #! that appears at the beginning of a script file and It's also known as hashbang, sha-bang, pound-bang, or hash-pling. It is a 
+   Interpreter to execute the commands and syntax inside a shell-script. 
+-> Before they have several types c shell, k shell, z shell, shell but now all is converted into bash.
+-> /bin a folder that contains executable files, or binaries, that are essential to the operating system.
+-> we can't execute the script file in windows machine, we can run script file in linux machines/bash by sh <file-name>, bash <file-name>,
+   ./<file-name> - for this we need chnage in execute mode then only we can execute the file.
+
+2. printing statements?
+-> we can write the printing statements with/without using double quotes.
+   #!/bin/bash                       #first will be the shebang/Interpreter and the bash name
+   echo "Hello-world!"
+   echo welcome to devops-practice 
+   
+3. variables?
+-> It is a name given to a memory location/ a centralise place to mention the values, If you change at 1 place, It will reflect at all 
+   other places where it is reffered.
+   eg1: a=1, b=2
+   DRY == Don't Repeat Yourself
+   eg2: PERSON1=ramesh
+		PERSON2=suresh
+
+		echo "$PERSON1 :: Hi, How are you $PERSON2?"
+		echo "$PERSON2 :: Hello $PERSON1, I am fine."
+		echo "$PERSON2 :: how are you doig? $PERSON1"
+		echo "$PERSON1 :: I am doing great! Thanks for asking."
+		echo "$PERSON2 :: ok bye! $PERSON1"
+   eg3: arguments/arg - run time variables and no need to edit script.
+		PERSON1=$1 #user input method by arg
+		PERSON2=$2
+
+		echo "$PERSON1 :: Hi, How are you $PERSON2?"
+		echo "$PERSON2 :: Hello $PERSON1, I am fine."
+		echo "$PERSON2 :: how are you doig? $PERSON1"
+		echo "$PERSON1 :: I am doing great! Thanks for asking."
+		echo "$PERSON2 :: ok bye! $PERSON1"
+	while running need to do declare variables ./<file-name> <var1> <var2>
+   eg4: read is a user input method we can declare the variables in runtime.
+		echo "please enter your username::"
+		read -s USERNAME
+		echo "username entered: $USERNAME"
+		echo "please enter your password: " 
+		read -s PASSWORD  # -s means secure the input without showing
+		#echo "password entered: $PASSWORD"

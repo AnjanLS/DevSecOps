@@ -1,0 +1,11 @@
+- name: store output in shell variable
+  hosts: local
+  connection: local
+  tasks:
+  - name: storing in shell 
+    shell: ls -ltr
+    register: shell_result
+
+  - name: print variable
+    debug:
+      msg: "{{ shell_result }}"

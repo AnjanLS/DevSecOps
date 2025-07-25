@@ -1,0 +1,22 @@
+- name: printing the datatypes
+  hosts: local
+  connection: local
+  vars:
+    name: "Anjan" #string
+    age: 27 #numeric
+    height: 5.9 #float  
+    skills: #list
+    - linux
+    - shell
+    - ansible
+    - aws
+    active: true  #boolean
+    address:  #map/dictionary
+      locality: gandhinagar
+      city: "bangalore"
+      pin: 560076
+    empty_value: null #null/empty
+  tasks:
+  - name: printing my information
+    debug:
+      msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam {{active}}"

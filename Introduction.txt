@@ -1,0 +1,72 @@
+Session-01
+==========
+1.What is Devops?
+DevOps is a process of building, testing and releasing code on the same day when developer writes something.Through this process we can achieve 
+collaboration between teams,The main goal of devops is faster releases and less defects.
+ 
+ 
+2.Why DevOps? 
+To overcome the disadvantages of waterfall model and agile methodology devops came into picture bcs through waterfall model we had achieved some 
+30 to 40% accuracy in Output nd through agile methodology we had achieved some 80% but through devops, We are achieving in between 90 to 95% accuracy.
+ 
+ 
+3.What is the Waterfall model? 
+The Waterfall methodology — also known as the Waterfall model — is a sequential development process that flows like a waterfall through all phases 
+of a project (analysis, design, development, and testing, for example), with each phase completely wrapping up/freezed before the next phase begins
+ 
+Advantages of Waterfall Model
+------------------------------
+i)Quality of the product will be good.
+
+ii)Since Requirement changes are not allowed, chances of finding bugs will be less.
+
+iii)Initial investment is less since the testers are hired at the later stages.
+
+iv)Preferred for small projects where requirements are freezed.
+
+Disadvantages of Waterfall Model
+
+i)Requirement changes are not allowed.
+
+ii)If there is a defect in the Requirement that will be continued in later phases.
+
+iii)Total investment is more because time taking for rework on defects is time consuming which leads to high investment.
+
+iv)Testing will start only after coding.
+
+
+4.what is sdlc?
+SDLC stands for Software Development Life Cycle, which is a structured process that helps development teams design, build, test, and maintain software.
+The goal of SDLC is to create high-quality software that meets customer needs while reducing risk and costs.       
+         
+Planning: The first stage of SDLC, where the team sets goals and plans to achieve them
+Requirements gathering and analysis: The team gathers and analyzes requirements
+Design: The team designs the software
+Coding or implementation: The team codes or implements the software
+Testing: The team tests the software
+Deployment: The team deploys the software
+Maintenance: The team maintains the software
+
+
+5.What is Agile Methodology?
+i)It is an Iterative and Incremental Approach.
+ii)Iterative means the same process repeating again and again.(The process keeps on repeating).
+iii)Incremental means, modules/features keep on adding on top of existing software. 
+iv)Agile is an Iterative and Incremental model where requirements keep on changing. 
+v)As a company we should be flexible to accept requirements change, develop, test and finally release a piece of working software within a short span 
+of time.
+vi)There will be good communication between Customer, Business Analyst, Developers & Testers.
+vii)The Goal of the agile model is customer satisfaction by delivering the piece of the software to the customer within a short span of time.
+viii)Agile Testing is a type of testing where we follow the agile principles. 
+
+Advantages:
+-----------
+i)Requirement changes are allowed in any stage of development (or) We can accommodate Requirement changes in the middle of development.
+ii)Releases will be very fast( Weekly)
+iii)Customers do not need to wait for a long time.
+iv)Good communication between the team.
+v)It is a very easy model to adopt.
+
+Disadvantages:
+--------------
+i)Less focus on design and documentation since we deliver software very faster.

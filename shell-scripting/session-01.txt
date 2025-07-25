@@ -1,0 +1,158 @@
+Session-11
+----------
+
+1. what are Datatypes?
+-> In Shell Scripting (Bash, Sh), variables do not have explicit data types(int,float,bin,oct,hex) like in other programming languages (e.g., Python, Java). 
+   Instead, everything is treated as a string by default, but the interpretation of the value can change based on how it is used.
+   
+Types of Data in Shell Scripting
+---------------------------------
+Even though Bash doesn't have strict data types, we can categorize them based on usage:
+
+a. String (Default) - Everything is a string unless used otherwise.
+   eg:#!/bin/bash
+	  name="Alice"
+	  echo "Hello, $name"
+
+b. Integer (Numbers) - Bash doesn’t support native integer data types, but we can use let, expr, or $(( )) for arithmetic.suppose 
+                       if we pass any string along with integer, instead of error those string will be treated as 0.
+   eg1:#!/bin/bash
+	   number1=$1
+	   number2=$2
+	   TIMESTAMP=$(date)
+	   echo "script executed at: $TIMESTAMP"
+	   sum=$(($number1+$number2))
+	   echo "sum of $number1 and $number2 is: $sum"
+   eg2:#!/bin/bash
+       number1=6
+       number2=anjan # any string will be treated as 0 
+       echo script will be executed at $(date)
+       sum=$(($number1+$number2))
+       echo "sum of $number1 and $number2 is: $sum"
+	  
+c. Array - In array() we can't increase the size but in arraylist[] we can increase the size, In array index starts from 0 & count 
+           starts from 1
+   eg:#!/bin/bash
+	  cars=("mustang" "Ferrari" "rolls-royce" "mitsubishi")
+	  echo my car collections are: ${cars[@]}
+	  echo "my first car collection is: ${cars[0]}"
+	  echo "my second car collection is: ${cars[1]}"
+	  echo "my last car collection is: ${cars[-1]}"
+	  echo "my total car collections are: ${#cars[@]}" #counting total numbers in an array
+	  
+d. Associative Array (Dictionary/Key-Value Pair)
+   eg:#!/bin/bash
+	  declare -A person
+	  person[name]="Alice"
+	  person[age]=25
+	  echo "Name: ${person[name]}"
+	  echo "Age: ${person[age]}"
+	  
+e. Boolean (Using Exit Codes) - Bash treats 0 as "true" and non-zero as "false".
+   eg:#!/bin/bash
+	  if [ -f "/etc/passwd" ]; then
+		  echo "File exists"  # Exit status 0 (true)
+	  else
+		  echo "File does not exist"  # Exit status non-zero (false)
+	  fi
+	  
+f. Special variables
+   eg:#!/bin/bash
+	  echo "number of variables: $#"
+	  echo "First Argument: $1"  #pass some variables during runtime sh 08-special-variables.sh hello world
+	  echo "Second Argument: $2"
+	  echo "All Arguments: $@"
+	  echo "my present working directory is: $PWD" #or $(pwd)
+	  echo "my present home is: $HOME"
+	  echo "current date and time is: $(date)"
+	  echo "current user is: $USER"
+	  echo "script name is: $0"
+	  echo "process id of current script: $$"
+	  sleep 10 &
+	  echo "process id of last cmd in background: $!"
+	  ls ./Shell-Scripting
+	  echo "Exit Status of Last Command: $?"
+	  echo "Random Number: $RANDOM"
+	  
+2. what is conditions?types?
+-> conditions are used to control the flow of the program, it allow scripts to make decision and execute some block of code when the 
+   condition is satisfied.
+   eg:if-else condition
+      -----------------
+	  #!/bin/bash
+      if [ condition ]; then
+	  echo " "
+	  else
+	  echo " "
+	  fi
+   eg:if-elif condition
+      -----------------
+	  #!/bin/bash
+	  if [ condition ]; then
+	  echo " "
+	  elif [ condition ]; then
+      echo " " 
+      else
+      echo " "
+	  fi
+   eg:while condition
+      ---------------
+      start
+      while [ condition ]; do 
+      echo " "
+      end
+      done
+	  
+3. automate script to install mysql
+->  #!/bin/bash
+	USERID=$(id -u)    #check the user id 
+	if [ $USERID -ne 0 ]; then
+		echo "Error:: you must have sudo access to privilage the script."
+		exit 1    #Failure occurs terminate the script without continuing
+	fi
+	#My method
+	dnf list installed mysql     #To check wheather it is installed/not
+	if [ $? -ne 0 ]; then        #check previous cmd execute status
+		if [ $USERID -ne 0 ]; then
+			dnf install mysql -y      #Installation cmd
+			echo "Successfully Installed Mysql.."
+		else
+			echo "Mysql.. Installation Failure"
+			exit 1    #Failure occurs terminate the script without continuing
+		fi
+	else
+		echo "Mysql... is already Installed"
+	fi
+	#daws method
+	dnf list installed git       #To check wheather it is installed/not
+	if [ $? -ne 0 ]; then        #check previous cmd execute status
+		dnf install git -y      #Installation cmd
+		if [ $? -ne 0 ]; then 
+			echo "Git.. Installation Failure" 
+			exit 1    #Failure occurs terminate the script without continuing      
+		else
+			echo "Successfully Installed Git.."
+		fi
+	else
+		echo "Git... is already Installed"
+	fi
+
+Explanation Steps
+------------------
+dnf install mysqlll -y
+
+check if the user running the script is root user or not
+if root user
+	allow him
+else
+	show the error properly and exit the script
+run install command
+check installation is success
+if success, our task is done
+if not success, throw the error message
+
+4. exit status/How can we check previous command is success or not in shell script?
+-> echo $? - if exit status is 0 it is success, otherwise it is failure
+
+-> The primary intention of coding in shell scripts or any other programming language is to minimize the number of lines while 
+   maintaining the same level of productivity.

@@ -1,0 +1,12 @@
+- name: Install nginx package on both nodes
+  hosts: app
+  become: yes
+  connection: ssh
+  vars:
+    required_package: "nginx"
+  tasks:
+  - name: Installing only if package is nginx
+    ansible.builtin.package:
+      name: "{{required_package}}"
+      state: present
+    when: required_package == "nginx"

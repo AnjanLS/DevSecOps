@@ -1,0 +1,65 @@
+Session-20
+----------
+
+Configuration management & deployment using ansible
+----------------------------------------------------
+
+-> while launching any EC2 instances under advance options in user data we can write any scripts to run and execute. this have sudo access 
+   at server creation time.
+   Example: #!/bin/bash
+			dnf install ansible -y
+			
+-> we use ansible for deployments & configuration managements within the server, like a CRUD operations.
+-> we can interact AWS account with console, CLI, API's by using open libraries we can pass the credentials and access CRUD operations.
+-> open libraries are different programming languages, by using ansible through API's we can access aws.
+-> ansible is made by using python libraries
+
+							console-----
+									   |
+									   |
+							CLI--------------> AWS
+									   |
+									   |
+		Ansible ----------> API---------
+				pyhtonlibs
+				boto3
+				botocore
+				
+-> using ansible we can create 3 servers(datbase,backend,frontend) and route53(3 records using privateIP, 1 record using PublicIP).
+-> using module amzon.aws.ec2_instance: we can interact with the aws services(create, terminate, etc)
+-> for this need to create IAM user to pass credentials for authentication.
+-> create user ansible and attach policy administratoraccess, modify access keys by creating new access key with CLI usecase & download 
+   the .csv file
+-> we need to configure aws credentials in ansible server -> aws configure
+-> and we need to pass details of user access key like 
+[ ec2-user@ip-172-31-26-6 ~ ]$ aws configure
+Access Key ID [None]: "{contains_keys}"
+Secret Access Key [None]: "{contains_keys}"
+Default region name [None]: us-east-1
+Default output format [None]: (just press Enter)
+
+-> then we can Interact with aws using ansible.
+create-ec2-r53.yaml
+--------------------
+- name: create EC2 and Route53 records
+  hosts: local
+  connection: local
+  vars:
+    subnet_id: subnet-0b94635311727885c
+    securitygroup_id: sg-059f0068b5b7b166c
+    ami_id: ami-09c813fb71547fc4f
+    instance_type: t2.micro
+    instances:
+    - database
+    - backend
+    - frontend
+  tasks:
+  - name: create EC2 Instances
+    amazon.aws.ec2_instance:
+      name: "{{ item }}"
+      subnet_id: "{{ subnet_id }}"
+      security_group: "{{ securitygroup_id}}"
+      image_id: "{{ ami_id }}"
+      instance_type: "{{ instance_type }}"
+    loop: "{{ instances }}"
+

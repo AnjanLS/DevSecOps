@@ -1,0 +1,155 @@
+Session-17
+----------
+-> facts == variables
+-> Ansible server which is connected to node and fetch all the node data.
+-> ansible.builtin.package means it runs installation cmd's in the background according to the linux flavours.
+   example: RHEL9->dnf, ubuntu->apt-get
+-> Ansible facts are pieces of information (key-value pairs) automatically gathered from remote hosts during playbook execution using 
+   the setup module. Includes OS type and version, Hostname, IP-addresses, Disk space, Memory info, CPU architecture, Network interfaces,
+   Custom user-defined facts.
+   Example: - name: Printing the facts
+			  hosts: web
+			  tasks:
+			  - name: Printing the facts
+				ansible.builtin.debug:
+				  msg: "{{ ansible_facts }}" 
+			
+			  - name: Printing the host info
+				ansible.builtin.debug:
+				  var: ansible_facts['default_ipv4']['address']
+   
+4. what is loops?
+-> ansible supports looping to run the same tasks multiple times, with different values or on multiple times. loops are powerful when
+   installaing multiple packages, copying files, or processing structured data. we can access by using reserved keyword item.
+   Example: - name: loops
+			  hosts: local
+			  connection: local
+			  tasks:
+			  - name: printing in loops
+				ansible.builtin.debug:
+				  msg: "hello {{ item }}"
+				loop:
+				- anjan
+				- aruna 
+				- abhi
+   
+   Installing and removing packages using loops:
+    - name: Install packages
+	  hosts: web
+	  become: true
+	  tasks:
+	  - name: Install packages
+		ansible.builtin.package:
+		  name: "{{ item }}"
+		  state: present
+		loop:
+		- git
+		- python3
+		- mysql
+		- gcc
+		- zip
+
+	  - name: Remove packages
+		ansible.builtin.package:
+		  name: "{{ item.name }}"
+		  state: "{{ item.state}}"
+		loop:
+		- { name: 'gcc', state: 'absent' }
+		- { name: 'zip', state: 'absent' }
+		
+5. what is functions?
+-> functions are reusable block of code that performs a specific task are also known as filters. we don't have access to create functions,
+   we can use default filters available in ansible.
+   filters = data manipulations
+   Example: - name: defining function
+			  hosts: local
+			  connection: local
+			  # vars:
+			  #   person: Abhi
+			  tasks: 
+			  - name: defining undefined variable
+				debug:
+				  msg: "Hello {{ person | default('Anjan') }}"
+
+			  - name: converting string into list
+				vars: 
+				  fruits: "apple, banana, cherry"
+				debug: 
+				  msg: "Fruits are {{ fruits | split(',') }}"
+				  
+			  - name: converting map into list
+				vars:
+				  details: 
+					name: "Anjan"
+					locality: "bangalore"
+				debug:
+					msg: "My Info: {{ details | dict2items }}"
+					
+			  - name: converting list into map
+				vars:
+				  fruits:
+					- fruit: apple
+					  color: red
+					- fruit: banana
+					  color: yellow
+					- fruit: cherry
+					  color: red
+					- fruit: dragonfruit
+					  color: pink
+				debug:
+				  msg: "fruits are: {{ fruits | items2dict (key_name='fruit', value_name='color') }}"
+
+			  - name: convert uppercase to lowercase
+				vars:
+				  name: "ANJAN L S"
+				debug:
+				  msg: "name in lowercase: {{ name | lower }}, name in uppercase: {{ name | upper }}"
+				  
+			  - name: print min and max number
+				vars:
+				  numbers: [21,63,92,54,78,33,04,10,98]
+				debug: 
+				  msg: "min number is: {{numbers | min}}, max number is: {{numbers | max}}"
+				  
+-> For this we need package netaddr for that we need to know the python version by ansible --version, and then pip3.9 install netaddr
+   If ip is not valid it shows false, it it's true it shows IP-address.
+			  - name: checking IP is valid or not
+				vars: 
+				  ip: "2673.081.638.538"
+				debug:
+				  msg: "{{ip | ansible.utils.ipaddr}}"
+				  
+-> For Installing zip package, pip3.9 install <zip> 
+
+6. what if module is not available?
+-> If module is not available in ansible, we can use shell(ansible.builtin.shell) and command(ansible.builtin.command) modules.
+   shell -> It's like logging into the shell/server and executing the command and we can access variables, redirections, pipes.
+   command -> It's like executing command from outside and not get access to variables, redirection, pipes etc. ssh ec2-user@IP command 
+   command is more secure, it will access outside from the server and shell is for complex commands it is less secure and have access to
+   env.
+   For Example: - name: command vs shell
+				  hosts: local
+				  connection: local
+				  tasks:
+				  - name: execute ls command in command module
+				    ansible.builtin.command: ls -ltr > /tmp/hello.txt	#error
+					
+				  - name: execute ls command in shell module
+					ansible.builtin.shell: ls -ltr > /tmp/hello.txt		#ok
+
+-> we can store the ouput in a variable and we can print it by using function.
+	- name: store output in shell variable
+	  hosts: local
+	  connection: local
+	  tasks:
+	  - name: storing in shell 
+		shell: ls -ltr
+		register: shell_result
+
+	  - name: print variable
+		debug:
+		  msg: "{{ shell_result }}"
+
+-> ansible is idempotent, running a playbook (or a specific task within it) multiple times will have the same effect as running it once,
+   provided no external changes are made between runs.
+   

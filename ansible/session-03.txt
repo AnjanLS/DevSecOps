@@ -1,0 +1,196 @@
+Session-16
+-----------
+
+-> Ansible playbook is a list of plays, we can write multiple modules/plays in a playbook.
+-> Ansible not only connects to the server, but it also able to connect for it's localhost.
+
+1. Variables?
+-> Variable have a name we can define, it can hold value. we can use it whenever we want. if we change the value it will reflect 
+   everywhere. It is DRY. we can declare by vars and access variable by using {{}}. It's also called play level variables.
+
+   Example for declaring variable: 
+   - name: variables
+	 hosts: local 
+     connection: local
+     vars:
+       name: Anjan
+       locality: gandhinagar
+       city: bangalore
+       pin: 560071
+     tasks:
+     - name: print the variables
+       ansible.builtin.debug:
+         msg: Hi, My name is {{ name }} and my current address is {{ locality, city, pin }}
+	
+	* Task level variables - Variables defined above the tasks are globally accessible, while those declared within tasks are limited to
+	that task only.
+	For Example:vars: #which is globally accessible
+				  name: Anjan
+				  locality: gandhinagar
+				  city: bangalore
+				  pin: 560071
+			    tasks:
+			    - name: print the tasks variables
+				  vars: #which is locally accessible
+				    name: Ajay
+				    locality: jayanagar
+				    city: mangalore
+				    pin: 560081
+					
+	* Variables from files - we can declare all the variables in a seperate file and we can access in the program.
+	For Example:vars_files:
+				- variables.yaml
+				
+	* Variables from prompt - we can use vars_prompt for variable user-input & declare the program
+	For Example:vars_prompt:
+				- name: username
+				  prompt: "please, enter your username"
+				  private: false  #It's not confidential
+				  
+	* Variables from inventory - Declare the variables in the inventory.ini & access the variables in files.
+	For Example:[local:vars]
+				name="Anjan"
+				city="bangalore"
+				locality="gandhinagar"
+				pin="560071"
+				
+	* Variables from Hosts: Declaring variables for required hosts in inventory & it's only accessible for that hosts.
+	For Example:[web]
+				172.31.82.249 name="amar" city="mangalore" locality="jayanagara" pin="700901" ansible_user="ec2-user" 
+				ansible_password="DevOps321"
+				localhost name="sharanya" city="mysore" locality="JPnagara" pin="879003" ansible_user="ec2-user" 
+				ansible_password="DevOps321"
+				
+	* Variables from commandline: we can also declare the variables from commandline by -e, if variables aren't declared in inventory.ini
+	file and we can also use single quotes while declaring variables if it has a gap.
+	For Example:ansible-playbook -i inventory.ini 11-variable-from-commandline.yaml -e "name=Anjan" -e "city=bangalore" -e 
+				"locality='gandhi nagara'" -e "pin=560071"
+	
+	* Variables from preferences: we can declare the variable from host, inventory, commandline, prompt, files & play level, but it will
+	give preferences according to the list commandline->task->files->prompt->play->inventory->roles.
+	For Example:- name: printing the 1st variable preference
+				  hosts: local
+				  connection: local
+				  vars:
+					Greet: "playlevel"
+				  vars_files:
+				  - variables.yaml
+				  vars_prompt:
+				  - name: Greet
+					prompt: Enter your input
+					private: false
+				  tasks:
+				  - name: printing the task variable
+					vars:
+					  greet: "task"
+					debug:
+					  msg: "Hello from {{greet}}" 
+					  
+	[ ec2-user@ip-172-31-84-147 ~/DevSecOps/Ansible ]$ ansible-playbook -i inventory.ini 12-variable-from-preference.yaml -e "greet=commandline"
+	Enter your input: prompt
+	[WARNING]: Found variable using reserved name: name
+
+	PLAY [printing the 1st variable preference] **********************************************************************************************************
+
+	TASK [Gathering Facts] *******************************************************************************************************************************
+	ok: [localhost]
+
+	TASK [printing the task variable] ********************************************************************************************************************
+	ok: [localhost] => {
+		"msg": "Hello from commandline"
+	}
+
+	PLAY RECAP *******************************************************************************************************************************************
+	localhost                  : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+2. what is datatypes and types?
+-> In Ansible, variables support multiple data types, similar to other languages. Understanding these types is essential for writing 
+   robust playbooks, using conditionals, loops, and templates.
+   For Example:
+    | Data Type                 | Example                                | Description         |
+	| ------------------------- | -------------------------------------- | ------------------- |
+	| **String**                | `"Anjan"` or `'hello'`                 | Text values         |
+	| **Integer**               | `42`                                   | Whole numbers       |
+	| **Float**                 | `3.14`                                 | Decimal numbers     |
+	| **Boolean**               | `true`, `false`                        | Yes/No logic        |
+	| **List (Array)**          | `[1, 2, 3]`, `['a', 'b', 'c']`         | Ordered collection  |
+	| **Dictionary (Hash/Map)** | `{ name: "Anjan", city: "Bangalore" }` | Key-value pairs     |
+	| **Null**                  | `null` or `~`                          | Represents no value |
+   For Example:
+    - name: printing the datatypes
+	  hosts: local
+	  connection: local
+	  vars:
+		name: "Anjan"
+		age: 27
+		height: 5.9
+		skills:
+		- linux
+		- shell
+		- ansible
+		- aws
+		active: true
+		address:
+		  locality: gandhinagar
+		  city: "bangalore"
+		  pin: 560076
+		empty_value: null
+	  tasks:
+	  - name: printing my information
+		debug:
+		  msg: "my name is {{name}}, age: {{age}}, height: {{height}}, my skills are {{skills}} and my address is {{address}} and iam 
+		  {{active}}"
+
+3. what is conditions?
+-> Ansible uses when statements, which function similarly to if conditions in other programming languages. These when statements allow 
+   you to conditionally execute tasks based on specified criteria, such as variable values, facts, or the results of previous tasks. 
+   while using prompt we need to declare it's type | int
+   For Example:
+    - name: printing the value if it's greater than 10 or not
+	  hosts: local
+	  connection: local
+	  vars_prompt:
+	  - name: value
+		prompt: "please enter your value"
+		private: false
+	  tasks:
+	  - name: printing the value is greater than 10
+		ansible.builtin.debug:
+		  msg: "your value {{value}} is greater than 10"
+		when: value | int > 10
+
+	  - name: printing the value is <= 10
+		ansible.builtin.debug:
+		  msg: "your value {{value}} is less than or equal to 10"
+		when: value | int <= 10
+	
+	Installing packages on different nodes by using condition:
+	- name: Install nginx package on both nodes
+	  hosts: app
+	  become: yes
+	  connection: ssh
+	  vars:
+		required_package: "nginx"
+	  tasks:
+	  - name: Installing only if package is nginx
+		ansible.builtin.package:
+		  name: "{{required_package}}"
+		  state: present
+		when: required_package == "nginx"
+		
+	Installing packages according to flavours
+	- name: Installing nginx package on node machine
+	  hosts: web
+	  become: true  #like sudo
+	  tasks:
+	  - name: Install nginx if RHEL
+		ansible.builtin.dnf:
+		  name: nginx
+		  state: present
+		when: ansible_os_family == "RedHat"
+
+	  - name: Install nginx if Ubuntu
+		ansible.builtin.apt:
+		  name: nginx
+		  state: present
+		when: ansible_os_family == "Debian"

@@ -1,0 +1,256 @@
+Session-18
+----------
+Expense-project-ansible
+------------------------
+-> Implementing the complete expense project through ansible, for this we need ansible management server and 3 nodes(database-server, 
+   backend-server, frontend-server) which is attached to configuration management server.
+-> In inventory.ini file includes host/node which has IP/dns names with credentials, so it is easy to access to nodes.
+
+inventory.ini
+-------------
+[database]
+database.anjansriram.shop
+
+[backend]
+backend.anjansriram.shop
+
+[frontend]
+frontend.anjansriram.shop
+
+[all:vars]
+ansible_user="ec2-user" 
+ansible_password="DevOps321"
+
+database.yaml
+--------------
+- name: configure database server
+  hosts: database
+  become: true  #root-access
+  tasks:
+  - name: Insatll mysql libraries
+    ansible.builtin.pip:
+      name: "{{ item }}"  #running loop for multiple installation packages
+      executable: pip3.9  #following according to cmd(pip3.9 install <package-name>)
+    loop:
+    - cryptography
+    - PyMySQL
+
+  - name: Install mysql-server
+    package:
+      name: mysql-server
+      state: present    #package-installation
+
+  - name: start and enable mysql-server
+    service:
+      name: mysqld
+      state: started    #starting-service
+      enabled: yes      #enabling-service
+
+  - name: connect to mysql-server
+    community.mysql.mysql_info:     #connecting to mysql-server & storing output with ignoring errors
+      login_user: root
+      login_password: ExpenseApp@1
+      login_host: database.anjansriram.shop
+    register: mysql_info
+    ignore_errors: true
+
+  - name: print the output
+    debug:
+      msg: "Mysql info: {{mysql_info}}"   #printing the o/p
+
+  - name: setup root-password   #password setup for root to access mysql
+    ansible.builtin.command: " mysql_secure_installation --set-root-pass ExpenseApp@1 "
+    when: mysql_info.failed is true
+	
+-> ]$ nslookup database.anjansriram.shop
+	Server:         172.31.0.2
+	Address:        172.31.0.2#53
+
+	Non-authoritative answer:
+	Name:   database.anjansriram.shop
+	Address: 172.31.82.249
+
+backend.yaml
+-------------
+- name: configure backend server
+  hosts: backend
+  become: yes
+  tasks:
+  - name: disable current nodejs
+    ansible.builtin.command: dnf module disable nodejs -y
+
+  - name: enable nodejs 20
+    command: dnf module enable nodejs:20 -y
+
+  - name: Install nodejs
+    package:
+      name: "{{ item }}"
+      state: present
+    loop:
+    - nodejs
+    - mysql
+
+  - name: create user expense
+    ansible.builtin.user:
+      name: expense
+
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+
+  - name: download application code in specified path
+    ansible.builtin.get_url:
+      url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+      dest: /tmp/backend.zip
+
+  - name: unzip the downloaded code
+    ansible.builtin.unarchive:
+      src: /tmp/backend.zip
+      dest: /app
+      remote_src: yes   #If file is already in the remote machine 
+
+  - name: Install dependencies
+    community.general.npm:
+      path: /app
+
+  - name: copy backend.service file 
+    ansible.builtin.copy:
+      src: backend.service
+      dest: /etc/systemd/system/backend.service
+
+  - name: Install python libraries
+    ansible.builtin.pip:
+      name: "{{ item }}"
+      executable: pip3.9
+    loop:
+    - PyMySQL
+    - cryptography
+
+  - name: import mysql data
+    community.mysql.mysql_db:
+      state: import
+      name: all
+      login_user: root
+      login_password: ExpenseApp@1
+      login_host: database.anjansriram.shop
+      target: /app/schema/backend.sql
+
+  - name: daemon reload and restart service
+    ansible.builtin.systemd_service:
+      enabled: true
+      state: restarted
+      daemon_reload: true
+      name: backend
+
+-> To know that present server is connected to any other server
+   Example:telnet backend.anjansriram.shop 8080
+		   Trying 172.31.17.125...
+		   Connected to backend.anjansriram.shop.
+		   Escape character is '^]'.
+
+-> This health check to confirm 
+   Example: ]$ curl http://backend.anjansriram.shop:8080/health
+			   "This is the health check"
+
+frontend.yaml
+-------------
+- name: configuring frontend server
+  hosts: frontend
+  become: true
+  tasks:
+  - name: Install nginx
+    package:
+      name: nginx
+      state: present
+
+  - name: enable and start nginx service
+    ansible.builtin.service:
+      name: nginx
+      state: started
+      enabled: true
+
+  - name: remove default content that web-browser is serving
+    ansible.builtin.file:
+      path: /usr/share/nginx/html
+      state: absent
+
+  - name: create new html directory
+    ansible.builtin.file:
+      path: /usr/share/nginx/html
+      state: directory
+
+  - name: download frontend data
+    ansible.builtin.get_url:
+      url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-frontend-v2.zip
+      dest: /tmp/frontend.zip
+
+  - name: extract the downloaded data
+    ansible.builtin.unarchive:
+      src: /tmp/frontend.zip
+      dest: /usr/share/nginx/html
+      remote_src: yes
+
+  - name: copy expense config
+    ansible.builtin.copy:
+      src: expense.conf
+      dest: /etc/nginx/default.d/expense.conf
+
+  - name: restart nginx service
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
+  
+expense.conf
+------------
+proxy_http_version 1.1;
+
+location /api/ { proxy_pass http://backend.anjansriram.shop:8080/; }
+
+location /health {
+  stub_status on;
+  access_log off;
+}
+
+
+-> In case, we set ansible config file with inventory info then don't need to pass -i inventory.ini in cmd line to run a file.
+ansible.cfg
+------------
+[defaults]
+inventory = inventory.ini
+
+
+-> ]$ ansible --version
+   ansible [core 2.14.18]
+   config file = /etc/ansible/ansible.cfg
+   configured module search path = ['/home/ec2-user/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+   ansible python module location = /usr/lib/python3.9/site-packages/ansible
+   ansible collection location = /home/ec2-user/.ansible/collections:/usr/share/ansible/collections
+   executable location = /usr/bin/ansible
+   python version = 3.9.18 (main, Jan  4 2024, 00:00:00) [GCC 11.4.1 20230605 (Red Hat 11.4.1-2)] (/usr/bin/python3)
+   jinja version = 3.1.2
+   libyaml = True
+
+-> Every software have custom configuration file usually everything will stores in /etc, we can reconfigure in different file.
+-> ansible config file located in config file = /etc/ansible/ansible.cfg
+-> ansible will check according to the preferences and set the ansible.cfg file
+-> ansible configuration preference are
+   1. ANSIBLE_CONFIG (environment variable if set)
+   2. ansible.cfg (in the current directory)
+   3. ~/.ansible.cfg (in the home directory)
+   4. /etc/ansible/ansible.cfg
+   
+Configuring new ansible.cfg in current directory path
+---------------------------------------------------
+-> mkdir ansible-test
+-> ansible-config init --disabled > ansible.cfg
+-> less ansible.cfg		#Display the cfg info
+-> mv ansible.cfg ansible-test/
+-> export ANSIBLE_CONFIG=/home/ec2-user/ansible-test/ansible.cfg		#set the environment variable using export
+-> ansible --version		#display the newly set ansible.cfg file
+-> unset ANSIBLE_CONFIG		#remove the ansible.cfg  
+ 
+configuring ansible.cfg in home directory path
+-----------------------------------------------
+-> It will check the preference according to the list and load cfg file in hidden directory
+-> cp /ansible-test/ansible.cfg	~/.ansible.cfg
