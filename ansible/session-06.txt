@@ -14,16 +14,16 @@ Configuration management & deployment using ansible
 -> open libraries are different programming languages, by using ansible through API's we can access aws.
 -> ansible is made by using python libraries
 
-							console----
-									   |
-									   |
-							CLI--------------> AWS
-									   |
-									   |
+							          console----
+									                |
+									                |
+							          CLI--------------> AWS
+									                |
+									                |
 		Ansible ----------> API--------
-				pyhtonlibs
-				boto3
-				botocore
+				    pyhtonlibs
+				    boto3
+				    botocore
 				
 -> using ansible we can create 3 servers(datbase,backend,frontend) and route53(3 records using privateIP, 1 record using PublicIP).
 -> using module amzon.aws.ec2_instance: we can interact with the aws services(create, terminate, etc)
@@ -39,6 +39,7 @@ Default region name [None]: us-east-1
 Default output format [None]: (just press Enter)
 
 -> then we can Interact with aws using ansible.
+-> need to install boto3 and botocore python libraries.
 
 create-ec2-r53.yaml
 --------------------
@@ -55,6 +56,14 @@ create-ec2-r53.yaml
     - backend
     - frontend
   tasks:
+  - name: Install aws python libraries
+    ansible.builtin.pip:
+      name: "{{ item }}"
+      executable: pip3.9
+    loop:
+    - boto3
+    - botocore
+
   - name: create EC2 Instances
     amazon.aws.ec2_instance:
       name: "{{ item }}"
@@ -63,4 +72,3 @@ create-ec2-r53.yaml
       image_id: "{{ ami_id }}"
       instance_type: "{{ instance_type }}"
     loop: "{{ instances }}"
-
